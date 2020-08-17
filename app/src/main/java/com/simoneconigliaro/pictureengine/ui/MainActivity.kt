@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import com.simoneconigliaro.pictureengine.R
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 @AndroidEntryPoint

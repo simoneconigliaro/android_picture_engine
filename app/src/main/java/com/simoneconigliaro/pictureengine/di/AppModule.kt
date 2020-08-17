@@ -5,6 +5,8 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.simoneconigliaro.pictureengine.api.ApiService.Companion.BASE_URL
+import com.simoneconigliaro.pictureengine.api.PictureDeserializer
+import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.persistence.PictureDao
 import com.simoneconigliaro.pictureengine.persistence.PictureDatabase
 import dagger.Module
@@ -24,7 +26,7 @@ object AppModule {
     @Provides
     fun provideGsonBuilder(): Gson {
         return GsonBuilder()
-            .excludeFieldsWithoutExposeAnnotation()
+            .registerTypeAdapter(Picture::class.java, PictureDeserializer())
             .create()
     }
 
@@ -53,4 +55,5 @@ object AppModule {
     fun providePictureDao(pictureDatabase: PictureDatabase): PictureDao {
         return pictureDatabase.pictureDao()
     }
+
 }
