@@ -1,6 +1,9 @@
 package com.simoneconigliaro.pictureengine.di
 
 import com.simoneconigliaro.pictureengine.api.ApiService
+import com.simoneconigliaro.pictureengine.persistence.PictureDao
+import com.simoneconigliaro.pictureengine.repository.MainRepository
+import com.simoneconigliaro.pictureengine.repository.MainRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +21,15 @@ object RepositoryModule {
         return retrofitBuilder
             .build()
             .create(ApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMainRepository(apiService: ApiService, pictureDao: PictureDao): MainRepository {
+        return MainRepositoryImpl(
+            apiService,
+            pictureDao
+        )
     }
 
 }
