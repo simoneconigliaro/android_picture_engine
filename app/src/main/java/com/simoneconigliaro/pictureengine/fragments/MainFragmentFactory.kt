@@ -2,9 +2,8 @@ package com.simoneconigliaro.pictureengine.fragments
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import androidx.lifecycle.ViewModelProvider
-import com.simoneconigliaro.pictureengine.ui.detail.DetailFragment
-import com.simoneconigliaro.pictureengine.ui.list.ListFragment
+import com.simoneconigliaro.pictureengine.ui.PictureDetailFragment
+import com.simoneconigliaro.pictureengine.ui.PictureListFragment
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,12 +18,12 @@ constructor(
 
         when (className) {
 
-            ListFragment::class.java.name -> {
-                return ListFragment()
+            PictureListFragment::class.java.name -> {
+                return PictureListFragment()
             }
 
-            DetailFragment::class.java.name -> {
-                return DetailFragment()
+            PictureDetailFragment::class.java.name -> {
+                return PictureDetailFragment()
             }
 
             else -> {

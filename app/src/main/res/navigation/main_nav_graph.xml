@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/listFragment">
+    app:startDestination="@id/pictureListFragment">
 
     <fragment
-        android:id="@+id/listFragment"
-        android:name="com.simoneconigliaro.pictureengine.ui.list.ListFragment"
-        android:label="fragment_list"
-        tools:layout="@layout/fragment_list">
+        android:id="@+id/pictureListFragment"
+        android:name="com.simoneconigliaro.pictureengine.ui.PictureListFragment"
+        android:label="fragment_picture_list"
+        tools:layout="@layout/fragment_picture_list">
 
         <action
-            android:id="@+id/action_listFragment_to_detailFragment"
-            app:destination="@id/detailFragment"
+            android:id="@+id/action_pictureListFragment_to_pictureDetailFragment"
+            app:destination="@id/pictureDetailFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
@@ -21,15 +21,15 @@
     </fragment>
 
     <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.simoneconigliaro.pictureengine.ui.detail.DetailFragment"
-        android:label="fragment_detail"
+        android:id="@+id/pictureDetailFragment"
+        android:name="com.simoneconigliaro.pictureengine.ui.PictureDetailFragment"
+        android:label="fragment_picture_detail"
 
-        tools:layout="@layout/fragment_detail">
+        tools:layout="@layout/fragment_picture_detail">
 
         <action
-            android:id="@+id/action_detailFragment_to_listFragment"
-            app:destination="@id/listFragment"
+            android:id="@+id/action_pictureDetailFragment_to_pictureListFragment"
+            app:destination="@id/pictureListFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"

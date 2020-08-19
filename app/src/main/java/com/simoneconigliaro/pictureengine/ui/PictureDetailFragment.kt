@@ -1,10 +1,10 @@
-package com.simoneconigliaro.pictureengine.ui.detail
+package com.simoneconigliaro.pictureengine.ui
 
 import androidx.fragment.app.Fragment
 import com.simoneconigliaro.pictureengine.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailFragment : Fragment(R.layout.fragment_detail) {
+class PictureDetailFragment : Fragment(R.layout.fragment_picture_detail) {
 
 }

@@ -2,6 +2,7 @@ package com.simoneconigliaro.pictureengine.di
 
 import com.simoneconigliaro.pictureengine.api.ApiService
 import com.simoneconigliaro.pictureengine.persistence.PictureDao
+import com.simoneconigliaro.pictureengine.persistence.PictureDatabase
 import com.simoneconigliaro.pictureengine.repository.MainRepository
 import com.simoneconigliaro.pictureengine.repository.MainRepositoryImpl
 import dagger.Module
@@ -25,11 +26,16 @@ object RepositoryModule {
 
     @Singleton
     @Provides
+    fun providePictureDao(pictureDatabase: PictureDatabase): PictureDao {
+        return pictureDatabase.pictureDao()
+    }
+
+    @Singleton
+    @Provides
     fun provideMainRepository(apiService: ApiService, pictureDao: PictureDao): MainRepository {
         return MainRepositoryImpl(
             apiService,
             pictureDao
         )
     }
-
 }

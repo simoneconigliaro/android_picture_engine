@@ -6,6 +6,7 @@ import com.simoneconigliaro.pictureengine.persistence.PictureDao
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.ui.state.MainViewState
 import com.simoneconigliaro.pictureengine.utils.ApiResponseHandler
+import com.simoneconigliaro.pictureengine.utils.Constants.API_KEY
 import com.simoneconigliaro.pictureengine.utils.DataState
 import com.simoneconigliaro.pictureengine.utils.StateEvent
 import kotlinx.coroutines.Dispatchers.IO
@@ -20,11 +21,10 @@ constructor(
     val pictureDao: PictureDao
 ) : MainRepository {
     override fun getListPictures(
-        apiKey: String,
         stateEvent: StateEvent
     ): Flow<DataState<MainViewState>> = flow {
         val apiResult = safeApiCall(IO) {
-            apiService.getListPictures(apiKey)
+            apiService.getListPictures(API_KEY)
         }
         emit(
             // this expression returns a dataState (contains data or error) which will be emitted as a flow

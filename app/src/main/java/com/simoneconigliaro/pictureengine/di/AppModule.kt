@@ -50,10 +50,4 @@ object AppModule {
             .build()
     }
 
-    @Singleton
-    @Provides
-    fun providePictureDao(pictureDatabase: PictureDatabase): PictureDao {
-        return pictureDatabase.pictureDao()
-    }
-
 }

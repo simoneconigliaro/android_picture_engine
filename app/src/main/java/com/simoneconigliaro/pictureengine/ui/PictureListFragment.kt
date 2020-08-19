@@ -1,4 +1,4 @@
-package com.simoneconigliaro.pictureengine.ui.list
+package com.simoneconigliaro.pictureengine.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -8,17 +8,16 @@ import androidx.navigation.fragment.findNavController
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.api.ApiService
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.fragment_picture_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class ListFragment : Fragment(R.layout.fragment_list) {
+class PictureListFragment : Fragment(R.layout.fragment_picture_list) {
 
     private val TAG = "ListFragment"
 
@@ -30,7 +29,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
         // testing navigation
         button.setOnClickListener(View.OnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_detailFragment)
+            findNavController().navigate(R.id.action_pictureListFragment_to_pictureDetailFragment)
         })
 
         // testing hilt and apiService

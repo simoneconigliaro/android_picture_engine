@@ -6,5 +6,5 @@ import com.simoneconigliaro.pictureengine.utils.StateEvent
 import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
-    fun getListPictures(apiKey: String, stateEvent: StateEvent): Flow<DataState<MainViewState>>
+    fun getListPictures(stateEvent: StateEvent): Flow<DataState<MainViewState>>
 }
