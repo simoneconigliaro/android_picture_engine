@@ -5,11 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.PictureListFragment">
 
-
-    <Button
-        android:id="@+id/button"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>

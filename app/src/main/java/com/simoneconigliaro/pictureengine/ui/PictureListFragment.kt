@@ -4,14 +4,19 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.api.ApiService
+import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.utils.ErrorStateCallback
+import com.simoneconigliaro.pictureengine.utils.TopSpacingItemDecoration
 import com.simoneconigliaro.pictureengine.utils.UIController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_picture_list.*
@@ -26,13 +31,18 @@ import javax.inject.Inject
 @FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class PictureListFragment : Fragment(R.layout.fragment_picture_list) {
+class PictureListFragment
+constructor(
+    private val requestManager: RequestManager
+) : Fragment(R.layout.fragment_picture_list), PictureAdapter.Interaction {
 
     private val TAG = "ListFragment"
 
     private val viewModel: MainViewModel by viewModels()
 
     lateinit var uiController: UIController
+
+    lateinit var pictureAdapter: PictureAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +52,9 @@ class PictureListFragment : Fragment(R.layout.fragment_picture_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
         subscribeObservers()
-
-        button.setOnClickListener(View.OnClickListener {
-            viewModel.setStateEvent(MainStateEvent.GetListPicturesEvent)
-        })
+        initData()
 
     }
 
@@ -68,13 +76,7 @@ class PictureListFragment : Fragment(R.layout.fragment_picture_list) {
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
 
             viewState.listFragmentViews.listPictures?.let {
-                for (picture in it) {
-
-                    Log.d(TAG, "onViewCreated: id: ${picture.id}")
-                    Log.d(TAG, "onViewCreated: url: ${picture.url}")
-                    Log.d(TAG, "onViewCreated: username: ${picture.username}")
-                    Log.d(TAG, "onViewCreated: userPicture: ${picture.userPicture}")
-                }
+                pictureAdapter.submitList(it)
             }
         })
 
@@ -94,5 +96,22 @@ class PictureListFragment : Fragment(R.layout.fragment_picture_list) {
                 )
             }
         })
+    }
+
+    private fun initData() {
+        viewModel.setStateEvent(MainStateEvent.GetListPicturesEvent)
+    }
+
+    private fun initRecyclerView() {
+        recycler_view.apply {
+            layoutManager = LinearLayoutManager(this@PictureListFragment.context)
+            addItemDecoration(TopSpacingItemDecoration(30))
+            pictureAdapter = PictureAdapter(requestManager, this@PictureListFragment)
+            adapter = pictureAdapter
+        }
+    }
+
+    override fun onItemSelected(item: Picture) {
+        Toast.makeText(context, "" + item.id, Toast.LENGTH_LONG).show()
     }
 }

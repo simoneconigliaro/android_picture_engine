@@ -76,6 +76,14 @@ dependencies {
     implementation "androidx.room:room-runtime:$room"
     implementation "androidx.room:room-ktx:$room"
     kapt "androidx.room:room-compiler:$room"
+
+    //glide
+    def glide_version = "4.11.0"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+    def circle_imageview_version = "3.1.0"
+    implementation "de.hdodenhof:circleimageview:$circle_imageview_version"
 }
 
 kapt {

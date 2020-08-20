@@ -1,9 +1,14 @@
 package com.simoneconigliaro.pictureengine.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.api.ApiService.Companion.BASE_URL
 import com.simoneconigliaro.pictureengine.api.PictureDeserializer
 import com.simoneconigliaro.pictureengine.model.Picture
@@ -48,6 +53,24 @@ object AppModule {
         )
             .fallbackToDestructiveMigration()
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRequestOptions(): RequestOptions {
+        return RequestOptions
+            .placeholderOf(R.drawable.default_image)
+            .error(R.drawable.default_image)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGlideInstance(
+        application: Application,
+        requestOptions: RequestOptions
+    ): RequestManager {
+        return Glide.with(application)
+            .setDefaultRequestOptions(requestOptions)
     }
 
 }
