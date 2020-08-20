@@ -1,6 +1,6 @@
 package com.simoneconigliaro.pictureengine.ui
 
-import android.util.Log
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,12 +17,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class MainViewModel
-@Inject
+@ViewModelInject
 constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
@@ -106,7 +105,6 @@ constructor(
     }
 
     fun clearErrorState(index: Int = 0) {
-        Log.d("BaseViewModel", "clearStateMessage")
         dataChannelManager.clearErrorState(index)
     }
 }

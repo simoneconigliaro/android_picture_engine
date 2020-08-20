@@ -6,3 +6,7 @@ package com.simoneconigliaro.pictureengine.utils
 data class ErrorState(
     var message: String
 )
+
+interface ErrorStateCallback {
+    fun removeErrorFromStack()
+}

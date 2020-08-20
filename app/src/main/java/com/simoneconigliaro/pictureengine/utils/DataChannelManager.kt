@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.onEach
 @ExperimentalCoroutinesApi
 abstract class DataChannelManager<ViewState> {
 
+    private val TAG = "DataChannelManager"
+
     private var channelScope: CoroutineScope? = null
     private val stateEventManager: StateEventManager = StateEventManager()
 
@@ -53,10 +55,12 @@ abstract class DataChannelManager<ViewState> {
     private fun canExecuteNewStateEvent(stateEvent: StateEvent): Boolean {
         // If a job is already active, do not allow duplication
         if (isJobAlreadyActive(stateEvent)) {
+            Log.d(TAG, "canExecuteNewStateEvent: there's a job already active")
             return false
         }
         // if an error is showing, do not allow new StateEvents
         if (!isErrorStackEmpty()) {
+            Log.d(TAG, "canExecuteNewStateEvent: error stack is not empty")
             return false
         }
         return true
@@ -75,7 +79,6 @@ abstract class DataChannelManager<ViewState> {
     }
 
     fun clearErrorState(index: Int = 0) {
-        Log.d("DataChannelManager", "clear error state")
         errorStack.removeAt(index)
     }
 
