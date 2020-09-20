@@ -23,4 +23,6 @@ object Constants {
     const val INVALID_STATE_EVENT = "Invalid state event"
 
     const val UNABLE_TO_RETRIEVE_PICTURES = "Unable to retrieve list pictures"
+
+    const val UNABLE_TO_RETRIEVE_DETAILS_PICTURE = "Unable to retrieve details picture"
 }

@@ -1,7 +1,9 @@
 package com.simoneconigliaro.pictureengine.repository
 
+import android.util.Log
 import com.simoneconigliaro.pictureengine.api.ApiService
 import com.simoneconigliaro.pictureengine.model.Picture
+import com.simoneconigliaro.pictureengine.model.PictureDetail
 import com.simoneconigliaro.pictureengine.persistence.PictureDao
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.ui.state.MainViewState
@@ -46,8 +48,34 @@ constructor(
                 }
             }.result
         )
-
     }
 
+    override fun getPictureById(
+        id: String,
+        stateEvent: StateEvent
+    ): Flow<DataState<MainViewState>> = flow {
+        val apiResult = safeApiCall(IO) {
+            apiService.getPictureById(id, API_KEY)
+        }
+        emit(
+            object : ApiResponseHandler<MainViewState, PictureDetail>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override fun handleSuccess(resultObj: PictureDetail): DataState<MainViewState> {
+                    Log.d("", "handleSuccess: ${resultObj.id}")
+                    val viewState = MainViewState(
+                        detailFragmentViews = MainViewState.DetailFragmentViews(
+                            pictureDetail = resultObj
+                        )
+                    )
+                    return DataState.data(
+                        data = viewState,
+                        stateEvent = stateEvent
+                    )
+                }
+            }.result
+        )
+    }
 
 }

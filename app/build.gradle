@@ -84,6 +84,9 @@ dependencies {
 
     def circle_imageview_version = "3.1.0"
     implementation "de.hdodenhof:circleimageview:$circle_imageview_version"
+
+    def photo_view_version = "2.3.0"
+    implementation "com.github.chrisbanes:PhotoView:$photo_view_version"
 }
 
 kapt {

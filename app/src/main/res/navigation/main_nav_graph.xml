@@ -14,27 +14,34 @@
         <action
             android:id="@+id/action_pictureListFragment_to_pictureDetailFragment"
             app:destination="@id/pictureDetailFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"/>
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
         android:id="@+id/pictureDetailFragment"
         android:name="com.simoneconigliaro.pictureengine.ui.PictureDetailFragment"
         android:label="fragment_picture_detail"
-
         tools:layout="@layout/fragment_picture_detail">
-
+        
         <action
-            android:id="@+id/action_pictureDetailFragment_to_pictureListFragment"
-            app:destination="@id/pictureListFragment"
+            android:id="@+id/action_pictureDetailFragment_to_pictureFullFragment"
+            app:destination="@id/pictureFullFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
-            app:popUpTo="@id/main_nav_graph"
-            app:popUpToInclusive="true" />
+            app:popExitAnim="@anim/fade_out" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/pictureFullFragment"
+        android:name="com.simoneconigliaro.pictureengine.ui.PictureFullFragment"
+        android:label="fragment_picture_full"
+        tools:layout="@layout/fragment_picture_full">
+    </fragment>
+
 </navigation>

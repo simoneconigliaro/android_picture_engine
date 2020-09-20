@@ -11,7 +11,9 @@ import com.google.gson.GsonBuilder
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.api.ApiService.Companion.BASE_URL
 import com.simoneconigliaro.pictureengine.api.PictureDeserializer
+import com.simoneconigliaro.pictureengine.api.PictureDetailDeserializer
 import com.simoneconigliaro.pictureengine.model.Picture
+import com.simoneconigliaro.pictureengine.model.PictureDetail
 import com.simoneconigliaro.pictureengine.persistence.PictureDao
 import com.simoneconigliaro.pictureengine.persistence.PictureDatabase
 import dagger.Module
@@ -32,6 +34,7 @@ object AppModule {
     fun provideGsonBuilder(): Gson {
         return GsonBuilder()
             .registerTypeAdapter(Picture::class.java, PictureDeserializer())
+            .registerTypeAdapter(PictureDetail::class.java, PictureDetailDeserializer())
             .create()
     }
 

@@ -42,12 +42,16 @@ class ErrorStack : ArrayList<ErrorState>() {
         }
 
         // if it's the first element added, it gets set straight in errorState
-        super.add(element)
-        Log.d(TAG, "element added to the stack: size ${this.size}")
-        if (this.size == 1) {
+        if (this.size == 0) {
+            Log.d(TAG, "first element, it gets set straight in errorState")
+            super.add(element)
+            Log.d(TAG, "first element added to the stack: size ${this.size}")
             setErrorState(errorState = element)
             return true
         }
+
+        super.add(element)
+        Log.d(TAG, "element added to the stack: size ${this.size}")
 
         // add element to the stack
         return true
@@ -65,6 +69,8 @@ class ErrorStack : ArrayList<ErrorState>() {
                 // so we set it in the errorState
                 if (this.size > 0) {
                     setErrorState(errorState = this[0])
+                } else {
+                    setErrorState(null)
                 }
 
                 // if the operation goes fine

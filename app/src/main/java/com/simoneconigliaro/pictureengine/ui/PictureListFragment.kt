@@ -1,11 +1,20 @@
 package com.simoneconigliaro.pictureengine.ui
 
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -38,24 +47,23 @@ constructor(
 
     private val TAG = "ListFragment"
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
-    lateinit var uiController: UIController
+    private lateinit var uiController: UIController
 
-    lateinit var pictureAdapter: PictureAdapter
+    private lateinit var pictureAdapter: PictureAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.setupChannel()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setCustomStatusBarHeight()
         initRecyclerView()
         subscribeObservers()
         initData()
-
     }
 
     override fun onAttach(context: Context) {
@@ -75,8 +83,10 @@ constructor(
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
 
-            viewState.listFragmentViews.listPictures?.let {
-                pictureAdapter.submitList(it)
+            if(viewState != null) {
+                viewState.listFragmentViews.listPictures?.let {
+                    pictureAdapter.submitList(it)
+                }
             }
         })
 
@@ -105,13 +115,24 @@ constructor(
     private fun initRecyclerView() {
         recycler_view.apply {
             layoutManager = LinearLayoutManager(this@PictureListFragment.context)
-            addItemDecoration(TopSpacingItemDecoration(30))
+            addItemDecoration(TopSpacingItemDecoration(48))
             pictureAdapter = PictureAdapter(requestManager, this@PictureListFragment)
             adapter = pictureAdapter
         }
     }
 
-    override fun onItemSelected(item: Picture) {
-        Toast.makeText(context, "" + item.id, Toast.LENGTH_LONG).show()
+    override fun onItemSelected(id: String) {
+        viewModel.setStateEvent(MainStateEvent.GetPictureDetailEvent(id))
+        findNavController().navigate(R.id.action_pictureListFragment_to_pictureDetailFragment)
     }
+
+    fun setCustomStatusBarHeight(){
+        var statusBarHeight = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            statusBarHeight = resources.getDimensionPixelSize(resourceId)
+        }
+        custom_status_bar.layoutParams.height = statusBarHeight
+    }
+
 }

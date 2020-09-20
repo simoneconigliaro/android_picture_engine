@@ -3,6 +3,7 @@ package com.simoneconigliaro.pictureengine.api
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.simoneconigliaro.pictureengine.model.Picture
 import java.lang.Exception
 import java.lang.reflect.Type
@@ -18,24 +19,25 @@ class PictureDeserializer : JsonDeserializer<Picture> {
 
             val jsonObjects = json.asJsonObject
 
-            val id = jsonObjects.get("id").asString
+            val id = getString(jsonObjects, "id")
 
             val urls = jsonObjects.get("urls").asJsonObject
-            val regularUrl = urls.get("regular").asString
+            val regularUrl = getString(urls, "regular")
 
             val user = jsonObjects.get("user").asJsonObject
-            val username = user.get("username").asString
+            val username = getString(user, "name")
 
             val profileImage = user.get("profile_image").asJsonObject
-            val smallProfilePicture = profileImage.get("small").asString
+            val mediumProfilePicture = getString(profileImage, "medium")
 
-            val picture = Picture(id, regularUrl, username, smallProfilePicture)
-
-            return picture
+            return Picture(id, regularUrl, username, mediumProfilePicture)
 
         } else throw Exception("json is null")
 
     }
 
-
+    private fun getString(jsonObject: JsonObject, key: String): String {
+        val jsonElement = jsonObject.get(key)
+        return if (!jsonElement.isJsonNull) jsonElement.asString else ""
+    }
 }

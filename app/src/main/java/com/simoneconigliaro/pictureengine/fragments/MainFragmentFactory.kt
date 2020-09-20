@@ -4,10 +4,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.ui.PictureDetailFragment
+import com.simoneconigliaro.pictureengine.ui.PictureFullFragment
 import com.simoneconigliaro.pictureengine.ui.PictureListFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Singleton
 class MainFragmentFactory
 @Inject
@@ -24,7 +29,10 @@ constructor(
             }
 
             PictureDetailFragment::class.java.name -> {
-                return PictureDetailFragment()
+                return PictureDetailFragment(requestManager)
+            }
+            PictureFullFragment::class.java.name -> {
+                return PictureFullFragment(requestManager)
             }
 
             else -> {

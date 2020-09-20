@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.simoneconigliaro.pictureengine.model.Picture
+import com.simoneconigliaro.pictureengine.model.PictureDetail
 import com.simoneconigliaro.pictureengine.repository.MainRepository
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.ui.state.MainViewState
@@ -17,7 +18,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Singleton
 
+@Singleton
 @FlowPreview
 @ExperimentalCoroutinesApi
 class MainViewModel
@@ -45,6 +48,10 @@ constructor(
             viewState.listFragmentViews.listPictures?.let { listPictures ->
                 setListPictures(listPictures)
             }
+
+            viewState.detailFragmentViews.pictureDetail?.let { pictureDetail ->
+                setPictureDetail(pictureDetail)
+            }
         }
     }
 
@@ -57,6 +64,10 @@ constructor(
                     mainRepository.getListPictures(
                         stateEvent
                     )
+                }
+                is MainStateEvent.GetPictureDetailEvent -> {
+                    setPictureDetail(null)
+                    mainRepository.getPictureById(stateEvent.id, stateEvent)
                 }
                 else -> {
                     emitInvalidStateEvent(stateEvent)
@@ -76,7 +87,7 @@ constructor(
 
     fun setupChannel() = dataChannelManager.setupChannel()
 
-    fun emitInvalidStateEvent(stateEvent: StateEvent) = flow {
+    private fun emitInvalidStateEvent(stateEvent: StateEvent) = flow {
         emit(
             DataState.error<MainViewState>(
                 errorMessage = INVALID_STATE_EVENT,
@@ -85,7 +96,7 @@ constructor(
         )
     }
 
-    fun launchJob(
+    private fun launchJob(
         stateEvent: StateEvent,
         jobFunction: Flow<DataState<MainViewState>?>
     ) = dataChannelManager.launchJob(stateEvent, jobFunction)
@@ -94,7 +105,7 @@ constructor(
         return viewState.value ?: initNewViewState()
     }
 
-    fun setViewState(viewState: MainViewState) {
+    private fun setViewState(viewState: MainViewState) {
         _viewState.value = viewState
     }
 
@@ -103,8 +114,14 @@ constructor(
         update.listFragmentViews.listPictures = listPictures
         setViewState(update)
     }
+    fun setPictureDetail(pictureDetail: PictureDetail?) {
+        val update = getCurrentViewStateOrNew()
+        update.detailFragmentViews.pictureDetail = pictureDetail
+        setViewState(update)
+    }
 
     fun clearErrorState(index: Int = 0) {
         dataChannelManager.clearErrorState(index)
+        onCleared()
     }
 }

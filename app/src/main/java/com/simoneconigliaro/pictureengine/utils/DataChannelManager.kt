@@ -36,13 +36,13 @@ abstract class DataChannelManager<ViewState> {
                 .onEach { dataState ->
                     dataState?.let { dState ->
                         withContext(Dispatchers.Main) {
-                            dataState.data?.let { data ->
+                            dState.data?.let { data ->
                                 handleNewData(data)
                             }
-                            dataState.error?.let { error ->
+                            dState.error?.let { error ->
                                 handleNewErrorState(error)
                             }
-                            dataState.stateEvent?.let { stateEvent ->
+                            dState.stateEvent?.let { stateEvent ->
                                 removeStateEvent(stateEvent)
                             }
                         }

@@ -6,23 +6,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
-import com.simoneconigliaro.pictureengine.model.Picture
-import kotlinx.android.synthetic.main.layout_picture_list_item.view.*
+import kotlinx.android.synthetic.main.layout_tag_list_item.view.*
 
-class PictureAdapter
+class TagAdapter
 constructor(
-    private val requestManager: RequestManager,
     private val interaction: Interaction
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Picture>() {
-        override fun areItemsTheSame(oldItem: Picture, newItem: Picture): Boolean {
-            return oldItem.id == newItem.id
+    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<String>() {
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Picture, newItem: Picture): Boolean {
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
             return oldItem == newItem
         }
     }
@@ -31,13 +28,12 @@ constructor(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return PictureViewHolder(
+        return TagViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.layout_picture_list_item,
+                R.layout.layout_tag_list_item,
                 parent,
                 false
             ),
-            requestManager,
             interaction
         )
     }
@@ -49,38 +45,33 @@ constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is PictureViewHolder -> {
+            is TagViewHolder -> {
                 holder.bind(differ.currentList[position])
             }
         }
     }
 
-    class PictureViewHolder
+    class TagViewHolder
     constructor(
         itemView: View,
-        private val requestManager: RequestManager,
         private val interaction: Interaction?
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Picture) {
+        fun bind(item: String) {
 
             itemView.setOnClickListener {
-                interaction?.onItemSelected(item.id)
+                interaction?.onItemSelected(item)
             }
 
-            itemView.tv_username.text = item.username
-            requestManager.load(item.userPicture).into(itemView.iv_user_picture)
-            requestManager.load(item.url).into(itemView.iv_picture)
+            itemView.tv_tag_item.text = item
         }
     }
 
-    fun submitList(newList: List<Picture>) {
+    fun submitList(newList: List<String>) {
         differ.submitList(newList)
     }
 
     interface Interaction {
-        fun onItemSelected(id: String)
+        fun onItemSelected(tag: String)
     }
-
-
 }
