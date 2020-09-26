@@ -9,9 +9,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_picture_full.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
+@AndroidEntryPoint
 class PictureFullFragment
 constructor(
     private val requestManager: RequestManager
@@ -19,13 +24,9 @@ constructor(
 
     private val viewModel: MainViewModel by activityViewModels()
 
-    private val scaleGestureDetector: ScaleGestureDetector? = null
-    private var mScaleFactor = 1.0f
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
-
     }
 
     private fun subscribeObservers() {
@@ -33,11 +34,9 @@ constructor(
             if (viewState != null) {
 
                 viewState.detailFragmentViews.pictureDetail?.let { pictureDetail ->
-                    requestManager.load(pictureDetail.url).into(iv_picture_full)
+                    requestManager.load(pictureDetail.regularUrl).into(iv_picture_full)
                 }
             }
         })
     }
-
-
 }

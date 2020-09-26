@@ -35,7 +35,8 @@ class PictureDetailDeserializer : JsonDeserializer<PictureDetail> {
             val regularUrl = getString(urls, "regular")
 
             val links = jsonObjects.get("links").asJsonObject
-            val urlToShare = getString(links, "html")
+            val shareUrl = getString(links, "html")
+            val downloadUrl = getString(links, "download")
 
             val likes = getString(jsonObjects, "likes")
             val views = getString(jsonObjects, "views")
@@ -72,8 +73,9 @@ class PictureDetailDeserializer : JsonDeserializer<PictureDetail> {
                 id = id,
                 width = width,
                 height = height,
-                url = regularUrl,
-                urlToShare = urlToShare,
+                regularUrl = regularUrl,
+                shareUrl = shareUrl,
+                downloadUrl = downloadUrl,
                 likes = likes,
                 views = views,
                 downloads = downloads,

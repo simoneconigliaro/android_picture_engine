@@ -1,8 +1,15 @@
 package com.simoneconigliaro.pictureengine.ui
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,14 +25,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.model.PictureDetail
-import com.simoneconigliaro.pictureengine.utils.ErrorStateCallback
-import com.simoneconigliaro.pictureengine.utils.TextUtil
-import com.simoneconigliaro.pictureengine.utils.UIController
-import com.simoneconigliaro.pictureengine.utils.UnitUtil
+import com.simoneconigliaro.pictureengine.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_picture_detail.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.android.synthetic.main.layout_picture_list_item.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Main
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.net.URL
+import java.util.*
 
 
 @FlowPreview
@@ -44,7 +55,9 @@ constructor(
 
     private lateinit var tagAdapter: TagAdapter
 
-    private var urlToShare: String? = null
+    private var shareUrl: String? = null
+
+    private var imageUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -62,7 +75,18 @@ constructor(
             findNavController().navigate(R.id.action_pictureDetailFragment_to_pictureFullFragment)
         })
 
-
+        button_download.setOnClickListener(View.OnClickListener {
+            if (NetworkUtil.isNetworkAvailable(context)) {
+                Toast.makeText(requireContext(), "Downloading...", Toast.LENGTH_SHORT).show()
+                downloadImage(imageUrl)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Unable to download, check internet connection",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     override fun onAttach(context: Context) {
@@ -90,7 +114,8 @@ constructor(
                     pictureDetail.tags?.let {
                         tagAdapter.submitList(it)
                     }
-                    urlToShare = pictureDetail.urlToShare
+                    shareUrl = pictureDetail.shareUrl
+                    imageUrl = pictureDetail.downloadUrl
 
                 }
             }
@@ -137,7 +162,7 @@ constructor(
         val exposureTime = UnitUtil.setUnitExposureTime(pictureDetail.cameraExposureTime)
         val dimensions = TextUtil.areFieldsBlank(pictureDetail.width, pictureDetail.height)
 
-        requestManager.load(pictureDetail.url).into(iv_picture_detail)
+        requestManager.load(pictureDetail.regularUrl).into(iv_picture_detail)
         requestManager.load(pictureDetail.userPicture).into(iv_user_picture_detail)
 
         showLocation(location)
@@ -186,8 +211,67 @@ constructor(
     private fun shareIntent(){
         val i = Intent(Intent.ACTION_SEND)
         i.type = "text/plain"
-        i.putExtra(Intent.EXTRA_TEXT, urlToShare)
+        i.putExtra(Intent.EXTRA_TEXT, shareUrl)
         startActivity(Intent.createChooser(i, "Share URL"))
+    }
+
+    private fun downloadImage(imageURL: String?) {
+
+        if (imageURL != null) {
+
+            val urlImage = URL(imageURL)
+
+            CoroutineScope(Dispatchers.IO).launch {
+
+                try {
+                    val bitmap = BitmapFactory.decodeStream(urlImage.openStream())
+                    bitmap?.apply {
+                        // get saved bitmap internal storage uri
+                        saveImage(this, requireContext())
+                    }
+                } catch (e: IOException) {
+                    showToast("Ops something went wrong, try again")
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun saveImage(bitmap: Bitmap, context: Context) {
+        val outputStream: OutputStream?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val values = ContentValues()
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + "Engine Picture")
+            val uri: Uri? =
+                context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            uri!!.let {
+                outputStream = context.contentResolver.openOutputStream(uri)
+            }
+
+        } else {
+            val imagePath: String =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    .toString()
+            val image = File(imagePath, "image_${UUID.randomUUID()}.jpg")
+            outputStream = FileOutputStream(image)
+        }
+        if (outputStream != null) {
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                outputStream.close()
+                showToast("Download complete")
+            } catch (e: Exception) {
+                showToast("Ops something went wrong, try again")
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun showToast(text: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -206,7 +290,6 @@ constructor(
                 shareIntent()
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 }
