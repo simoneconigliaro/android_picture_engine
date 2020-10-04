@@ -28,8 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_picture_detail">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -78,8 +78,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/constraint_layout_user_and_location">
 
             <View
@@ -417,11 +417,6 @@
         android:background="@null"
         app:elevation="0dp">
 
-        <View
-            android:id="@+id/custom_status_bar_detail"
-            android:layout_width="match_parent"
-            android:layout_height="0dp" />
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/custom_tool_bar"
             android:layout_width="match_parent"
@@ -429,5 +424,13 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_set_wallpaper"
+        android:layout_margin="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:text="@string/set_wallpaper"
+        app:icon="@drawable/ic_download" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -75,5 +75,4 @@ object AppModule {
         return Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
     }
-
 }

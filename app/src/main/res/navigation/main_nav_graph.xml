@@ -26,10 +26,17 @@
         android:name="com.simoneconigliaro.pictureengine.ui.PictureDetailFragment"
         android:label="fragment_picture_detail"
         tools:layout="@layout/fragment_picture_detail">
-        
+
         <action
             android:id="@+id/action_pictureDetailFragment_to_pictureFullFragment"
             app:destination="@id/pictureFullFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_pictureDetailFragment_to_pictureCropFragment"
+            app:destination="@id/pictureCropFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
@@ -41,7 +48,12 @@
         android:id="@+id/pictureFullFragment"
         android:name="com.simoneconigliaro.pictureengine.ui.PictureFullFragment"
         android:label="fragment_picture_full"
-        tools:layout="@layout/fragment_picture_full">
-    </fragment>
+        tools:layout="@layout/fragment_picture_full" />
+
+    <fragment
+        android:id="@+id/pictureCropFragment"
+        android:name="com.simoneconigliaro.pictureengine.ui.PictureCropFragment"
+        android:label="fragment_picture_crop"
+        tools:layout="@layout/fragment_picture_crop" />
 
 </navigation>

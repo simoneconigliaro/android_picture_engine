@@ -50,6 +50,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    def material_design_version = "1.2.1"
+    implementation "com.google.android.material:material:$material_design_version"
+
     def nav_version="2.3.0"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
@@ -87,6 +90,9 @@ dependencies {
 
     def photo_view_version = "2.3.0"
     implementation "com.github.chrisbanes:PhotoView:$photo_view_version"
+
+    def android_image_cropper_version = "2.8.+"
+    implementation "com.theartofdev.edmodo:android-image-cropper:$android_image_cropper_version"
 }
 
 kapt {

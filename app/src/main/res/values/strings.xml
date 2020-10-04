@@ -9,4 +9,8 @@
     <string name="exposure_time">Exposure Time</string>
     <string name="iso">ISO</string>
     <string name="dimensions">Dimensions</string>
+    <string name="set_wallpaper">SET WALLPAPER</string>
+    <string name="error">Something went wrong, try again</string>
+    <string name="download_complete">Download complete</string>
+    <string name="check_internet_connection">Unable to download, check internet connection</string>
 </resources>

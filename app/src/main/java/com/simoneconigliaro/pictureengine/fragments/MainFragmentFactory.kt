@@ -3,6 +3,7 @@ package com.simoneconigliaro.pictureengine.fragments
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.bumptech.glide.RequestManager
+import com.simoneconigliaro.pictureengine.ui.PictureCropFragment
 import com.simoneconigliaro.pictureengine.ui.PictureDetailFragment
 import com.simoneconigliaro.pictureengine.ui.PictureFullFragment
 import com.simoneconigliaro.pictureengine.ui.PictureListFragment
@@ -27,14 +28,15 @@ constructor(
             PictureListFragment::class.java.name -> {
                 return PictureListFragment(requestManager)
             }
-
             PictureDetailFragment::class.java.name -> {
                 return PictureDetailFragment(requestManager)
             }
             PictureFullFragment::class.java.name -> {
                 return PictureFullFragment(requestManager)
             }
-
+            PictureCropFragment::class.java.name -> {
+                return PictureCropFragment()
+            }
             else -> {
                 return super.instantiate(classLoader, className)
             }
