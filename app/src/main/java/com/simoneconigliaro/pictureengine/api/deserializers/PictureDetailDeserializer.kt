@@ -1,15 +1,12 @@
-package com.simoneconigliaro.pictureengine.api
+package com.simoneconigliaro.pictureengine.api.deserializers
 
-import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.simoneconigliaro.pictureengine.model.PictureDetail
-import org.json.JSONObject
 import java.lang.Exception
 import java.lang.reflect.Type
-import java.util.*
 import kotlin.collections.ArrayList
 
 class PictureDetailDeserializer : JsonDeserializer<PictureDetail> {

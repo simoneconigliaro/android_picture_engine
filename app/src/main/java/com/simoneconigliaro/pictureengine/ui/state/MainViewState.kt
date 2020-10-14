@@ -6,10 +6,15 @@ import com.simoneconigliaro.pictureengine.model.Picture
 
 data class MainViewState(
     var listFragmentViews: ListFragmentViews = ListFragmentViews(),
+    var searchFragmentViews: SearchFragmentViews = SearchFragmentViews(),
     var detailFragmentViews: DetailFragmentViews = DetailFragmentViews()
 ) {
 
     data class ListFragmentViews(
+        var listPictures: List<Picture>? = null
+    )
+
+    data class SearchFragmentViews(
         var listPictures: List<Picture>? = null
     )
 

@@ -1,4 +1,4 @@
-package com.simoneconigliaro.pictureengine.api
+package com.simoneconigliaro.pictureengine.api.deserializers
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer

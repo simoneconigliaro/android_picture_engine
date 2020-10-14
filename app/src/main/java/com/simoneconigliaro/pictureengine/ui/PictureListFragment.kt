@@ -2,12 +2,15 @@ package com.simoneconigliaro.pictureengine.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
@@ -45,6 +48,18 @@ constructor(
         initRecyclerView()
         subscribeObservers()
         initData()
+
+        swipe_refresh_layout.setOnRefreshListener { initData() }
+
+        recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) fab_search.hide() else if (dy < 0) fab_search.show()
+            }
+        })
+
+        fab_search.setOnClickListener(View.OnClickListener {
+            findNavController().navigate(R.id.action_pictureListFragment_to_pictureSearchFragment)
+        })
     }
 
     override fun onAttach(context: Context) {
@@ -64,7 +79,7 @@ constructor(
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
 
-            if(viewState != null) {
+            if (viewState != null) {
                 viewState.listFragmentViews.listPictures?.let {
                     pictureAdapter.submitList(it)
                 }
@@ -72,7 +87,8 @@ constructor(
         })
 
         viewModel.shouldDisplayProgressBar.observe(viewLifecycleOwner, Observer {
-            uiController.displayProgressBar(it)
+            swipe_refresh_layout.isRefreshing = it
+
         })
 
         viewModel.errorState.observe(viewLifecycleOwner, Observer { errorState ->
@@ -106,6 +122,5 @@ constructor(
         viewModel.setStateEvent(MainStateEvent.GetPictureDetailEvent(id))
         findNavController().navigate(R.id.action_pictureListFragment_to_pictureDetailFragment)
     }
-
 
 }

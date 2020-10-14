@@ -1,5 +1,6 @@
 package com.simoneconigliaro.pictureengine.api
 
+import com.simoneconigliaro.pictureengine.api.responses.SearchResponse
 import com.simoneconigliaro.pictureengine.model.PictureDetail
 import com.simoneconigliaro.pictureengine.model.Picture
 import retrofit2.http.GET
@@ -16,6 +17,12 @@ interface ApiService {
     suspend fun getListPictures(
         @Query("client_id") apiKey: String
     ): List<Picture>
+
+    @GET("search/photos/")
+    suspend fun getListPictureByQuery(
+        @Query("query") query: String,
+        @Query("client_id") apiKey: String
+    ) : SearchResponse
 
     @GET("photos/{id}/")
     suspend fun getPictureById(

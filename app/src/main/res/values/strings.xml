@@ -10,7 +10,12 @@
     <string name="iso">ISO</string>
     <string name="dimensions">Dimensions</string>
     <string name="set_wallpaper">SET WALLPAPER</string>
+    <string name="action_set_wallpaper">Set Wallpaper</string>
     <string name="error">Something went wrong, try again</string>
     <string name="download_complete">Download complete</string>
     <string name="check_internet_connection">Unable to download, check internet connection</string>
+    <string name="action_sort">Sort</string>
+    <string name="it_s_quite_empty_here">It\'s quite empty here</string>
+    <string name="why_don_t_you_search_for_something">Why don\'t you search for something</string>
+    <string name="search">Search</string>
 </resources>

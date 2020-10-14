@@ -18,6 +18,11 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_pictureListFragment_to_pictureSearchFragment"
+            app:destination="@id/pictureSearchFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/fade_out"/>
 
     </fragment>
 
@@ -55,5 +60,14 @@
         android:name="com.simoneconigliaro.pictureengine.ui.PictureCropFragment"
         android:label="fragment_picture_crop"
         tools:layout="@layout/fragment_picture_crop" />
+    <fragment
+        android:id="@+id/pictureSearchFragment"
+        android:name="com.simoneconigliaro.pictureengine.ui.PictureSearchFragment"
+        android:label="fragment_picture_search"
+        tools:layout="@layout/fragment_picture_search" >
+        <action
+            android:id="@+id/action_pictureSearchFragment_to_pictureDetailFragment"
+            app:destination="@id/pictureDetailFragment" />
+    </fragment>
 
 </navigation>

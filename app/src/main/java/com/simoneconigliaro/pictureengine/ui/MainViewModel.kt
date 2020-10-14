@@ -1,5 +1,6 @@
 package com.simoneconigliaro.pictureengine.ui
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,6 +30,8 @@ constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
+    private val TAG = "MainViewModel"
+
     private val _viewState: MutableLiveData<MainViewState> = MutableLiveData()
 
     val viewState: LiveData<MainViewState>
@@ -49,6 +52,10 @@ constructor(
                 setListPictures(listPictures)
             }
 
+            viewState.searchFragmentViews.listPictures?.let { listPictures ->
+                setSearchListPictures(listPictures)
+            }
+
             viewState.detailFragmentViews.pictureDetail?.let { pictureDetail ->
                 setPictureDetail(pictureDetail)
             }
@@ -65,6 +72,15 @@ constructor(
                         stateEvent
                     )
                 }
+
+                is MainStateEvent.GetListPicturesByQueryEvent -> {
+                    Log.d(TAG, "setStateEvent: GetListPicturesByQueryEvent")
+                    mainRepository.getListPicturesByQuery(
+                        stateEvent.query,
+                        stateEvent
+                    )
+                }
+
                 is MainStateEvent.GetPictureDetailEvent -> {
                     setPictureDetail(null)
                     mainRepository.getPictureById(stateEvent.id, stateEvent)
@@ -114,6 +130,14 @@ constructor(
         update.listFragmentViews.listPictures = listPictures
         setViewState(update)
     }
+
+    private fun setSearchListPictures(listPictures: List<Picture>) {
+        Log.d(TAG, "setSearchListPictures: $listPictures")
+        val update = getCurrentViewStateOrNew()
+        update.searchFragmentViews.listPictures = listPictures
+        setViewState(update)
+    }
+
     fun setPictureDetail(pictureDetail: PictureDetail?) {
         val update = getCurrentViewStateOrNew()
         update.detailFragmentViews.pictureDetail = pictureDetail

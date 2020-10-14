@@ -19,7 +19,4 @@ class BitmapUtil {
             bitmap
         }
     }
-
-
-
 }

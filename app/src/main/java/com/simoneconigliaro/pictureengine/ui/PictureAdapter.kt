@@ -74,7 +74,7 @@ constructor(
         }
     }
 
-    fun submitList(newList: List<Picture>) {
+    fun submitList(newList: List<Picture>?) {
         differ.submitList(newList)
     }
 

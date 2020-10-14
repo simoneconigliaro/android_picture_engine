@@ -10,11 +10,12 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.api.ApiService.Companion.BASE_URL
-import com.simoneconigliaro.pictureengine.api.PictureDeserializer
-import com.simoneconigliaro.pictureengine.api.PictureDetailDeserializer
+import com.simoneconigliaro.pictureengine.api.deserializers.PictureDeserializer
+import com.simoneconigliaro.pictureengine.api.deserializers.PictureDetailDeserializer
+import com.simoneconigliaro.pictureengine.api.deserializers.PictureSearchDeserializer
 import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.model.PictureDetail
-import com.simoneconigliaro.pictureengine.persistence.PictureDao
+import com.simoneconigliaro.pictureengine.api.responses.SearchResponse
 import com.simoneconigliaro.pictureengine.persistence.PictureDatabase
 import dagger.Module
 import dagger.Provides
@@ -33,8 +34,15 @@ object AppModule {
     @Provides
     fun provideGsonBuilder(): Gson {
         return GsonBuilder()
-            .registerTypeAdapter(Picture::class.java, PictureDeserializer())
-            .registerTypeAdapter(PictureDetail::class.java, PictureDetailDeserializer())
+            .registerTypeAdapter(Picture::class.java,
+                PictureDeserializer()
+            )
+            .registerTypeAdapter(SearchResponse::class.java,
+                PictureSearchDeserializer()
+            )
+            .registerTypeAdapter(PictureDetail::class.java,
+                PictureDetailDeserializer()
+            )
             .create()
     }
 

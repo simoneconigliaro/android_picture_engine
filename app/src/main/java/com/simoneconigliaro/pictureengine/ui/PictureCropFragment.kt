@@ -70,7 +70,7 @@ class PictureCropFragment : Fragment(R.layout.fragment_picture_crop) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.set_wallpaper_menu, menu)
+        inflater.inflate(R.menu.crop_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
