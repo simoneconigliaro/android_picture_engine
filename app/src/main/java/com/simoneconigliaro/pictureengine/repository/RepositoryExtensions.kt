@@ -4,7 +4,6 @@ import com.simoneconigliaro.pictureengine.utils.ApiResult
 import com.simoneconigliaro.pictureengine.utils.CacheResult
 import com.simoneconigliaro.pictureengine.utils.Constants.CACHE_ERROR_TIMEOUT
 import com.simoneconigliaro.pictureengine.utils.Constants.CACHE_TIMEOUT
-import com.simoneconigliaro.pictureengine.utils.Constants.NETWORK_DELAY
 import com.simoneconigliaro.pictureengine.utils.Constants.NETWORK_ERROR_TIMEOUT
 import com.simoneconigliaro.pictureengine.utils.Constants.NETWORK_TIMEOUT
 import com.simoneconigliaro.pictureengine.utils.Constants.UNKNOWN_ERROR

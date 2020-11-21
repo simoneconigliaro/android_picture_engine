@@ -84,7 +84,8 @@ class PictureDetailDeserializer : JsonDeserializer<PictureDetail> {
                 cameraAperture = cameraAperture,
                 cameraFocalLength = cameraFocalLength,
                 cameraIso = cameraIso,
-                tags = tags
+                tags = tags,
+                timestamp = null
             )
         } else throw Exception("json is null")
 

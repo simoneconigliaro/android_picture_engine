@@ -73,17 +73,13 @@ constructor(
 
         button_download.setOnClickListener(View.OnClickListener {
             if (NetworkUtil.isNetworkAvailable(context)) {
-                Toast.makeText(requireContext(), "Downloading...", Toast.LENGTH_SHORT).show()
+                requireContext().showToast(getString(R.string.downloading))
                 CoroutineScope(IO).launch {
                     val bitmap = BitmapUtil.downloadBitmapFromUrl(imageUrl)
                     saveImage(bitmap, requireContext())
                 }
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.check_internet_connection),
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().showToast(getString(R.string.check_internet_connection))
             }
         })
 
@@ -210,7 +206,7 @@ constructor(
     }
 
     private fun saveImage(bitmap: Bitmap?, context: Context) {
-        if(bitmap != null) {
+        if (bitmap != null) {
             val outputStream: OutputStream?
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val values = ContentValues()
@@ -236,18 +232,18 @@ constructor(
                 try {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
                     outputStream.close()
-                    showToast(getString(R.string.download_complete))
+                    showToastInMainThread(getString(R.string.download_complete))
                 } catch (e: Exception) {
-                    showToast(getString(R.string.error))
+                    showToastInMainThread(getString(R.string.error))
                     e.printStackTrace()
                 }
             }
         } else {
-            showToast(getString(R.string.error))
+            showToastInMainThread(getString(R.string.error))
         }
     }
 
-    private fun showToast(text: String) {
+    private fun showToastInMainThread(text: String) {
         GlobalScope.launch(Main) {
             Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
         }

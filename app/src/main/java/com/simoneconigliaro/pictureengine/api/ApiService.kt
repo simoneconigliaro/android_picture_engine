@@ -15,13 +15,14 @@ interface ApiService {
 
     @GET("photos/")
     suspend fun getListPictures(
-        @Query("client_id") apiKey: String
+        @Query("client_id") apiKey: String,
+        @Query("page") page: Int
     ): List<Picture>
 
     @GET("search/photos/")
     suspend fun getListPictureByQuery(
-        @Query("query") query: String,
-        @Query("client_id") apiKey: String
+        @Query("client_id") apiKey: String,
+        @Query("query") query: String
     ) : SearchResponse
 
     @GET("photos/{id}/")

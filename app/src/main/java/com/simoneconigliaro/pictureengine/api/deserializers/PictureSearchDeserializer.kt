@@ -25,7 +25,7 @@ class PictureSearchDeserializer : JsonDeserializer<SearchResponse> {
 
             val listPicture: ArrayList<Picture> = ArrayList()
 
-            for(result in results) {
+            for (result in results) {
 
                 val jsonObject = result.asJsonObject
 
@@ -40,7 +40,15 @@ class PictureSearchDeserializer : JsonDeserializer<SearchResponse> {
                 val profileImage = user.get("profile_image").asJsonObject
                 val mediumProfilePicture = getString(profileImage, "medium")
 
-                listPicture.add(Picture(id, regularUrl, username, mediumProfilePicture))
+                listPicture.add(
+                    Picture(
+                        id = id,
+                        url = regularUrl,
+                        username = username,
+                        userPicture = mediumProfilePicture,
+                        timestamp = null
+                    )
+                )
             }
 
             return SearchResponse(listPicture)

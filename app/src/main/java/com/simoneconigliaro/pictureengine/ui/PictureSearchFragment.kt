@@ -19,11 +19,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
+import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_picture_list.*
 import kotlinx.android.synthetic.main.fragment_picture_search.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -58,6 +61,7 @@ constructor(private val requestManager: RequestManager) :
         disableSwipeDownRefreshLayout()
         initRecyclerView()
         subscribeObservers()
+
     }
 
     override fun onAttach(context: Context) {
@@ -91,7 +95,9 @@ constructor(private val requestManager: RequestManager) :
                     Log.d(TAG, "subscribeObservers: $it")
 
                     if (it.isNotEmpty()) {
+
                         pictureAdapter.submitList(it)
+
                         layout_empty_list.visibility = View.GONE
                     } else {
                         layout_empty_list.visibility = View.VISIBLE
@@ -134,7 +140,7 @@ constructor(private val requestManager: RequestManager) :
 
         search_text_input_layout.editText?.setOnEditorActionListener { _, actionId, _ ->
 
-            val query: String = search_text_input_layout.editText?.text.toString()
+            val query = search_text_input_layout.editText?.text.toString()
 
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (query.isNotBlank()) {

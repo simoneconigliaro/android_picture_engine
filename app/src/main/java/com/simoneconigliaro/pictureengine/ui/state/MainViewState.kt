@@ -11,11 +11,13 @@ data class MainViewState(
 ) {
 
     data class ListFragmentViews(
-        var listPictures: List<Picture>? = null
+        var listPictures: List<Picture>? = null,
+        var page: Int? = null
     )
 
     data class SearchFragmentViews(
-        var listPictures: List<Picture>? = null
+        var listPictures: List<Picture>? = null,
+        var page: Int? = null
     )
 
     data class DetailFragmentViews(

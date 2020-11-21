@@ -1,35 +1,54 @@
-package com.simoneconigliaro.pictureengine.repository
+package com.project.simoneconigliaro.jetpackarchitecture.repository
 
-import com.simoneconigliaro.pictureengine.utils.ApiResult
-import com.simoneconigliaro.pictureengine.utils.CacheResponseHandler
+import android.util.Log
+import com.simoneconigliaro.pictureengine.repository.safeApiCall
+import com.simoneconigliaro.pictureengine.repository.safeCacheCall
+import com.simoneconigliaro.pictureengine.utils.*
 import com.simoneconigliaro.pictureengine.utils.Constants.NETWORK_ERROR
 import com.simoneconigliaro.pictureengine.utils.Constants.UNKNOWN_ERROR
-import com.simoneconigliaro.pictureengine.utils.DataState
-import com.simoneconigliaro.pictureengine.utils.StateEvent
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-@FlowPreview
 abstract class NetworkBoundResource<NetworkObj, CacheObj, ViewState>
 constructor(
-    private val dispatcher: CoroutineDispatcher, // responsible for making api and cache calls. so if it gets cancelled it cancels everything
-    private val stateEvent: StateEvent, // follow the request from the beginning till the result is showed in the ui
+    private val dispatcher: CoroutineDispatcher,
+    private val stateEvent: StateEvent,
     private val apiCall: suspend () -> NetworkObj?,
     private val cacheCall: suspend () -> CacheObj?
 ) {
 
-    private val TAG: String = "AppDebug"
+    private val TAG = "NetworkBoundResource"
 
-    // to create a flow ->  flow { and then use emit() to return the data
     val result: Flow<DataState<ViewState>> = flow {
 
-        // ****** STEP 1: VIEW CACHE ******
-        emit(returnCache(markJobComplete = false))
+        val cacheResult = safeCacheCall(dispatcher) { cacheCall.invoke() }
 
-        // ****** STEP 2: MAKE NETWORK CALL, SAVE RESULT TO CACHE ******
+        when (cacheResult) {
+            
+            is CacheResult.GenericError -> {
+                emit(
+                    DataState.error(
+                        errorMessage = stateEvent.errorInfo() + "\n\n Reason: " + cacheResult.errorMessage,
+                        stateEvent = stateEvent
+                    )
+                )
+            }
+            is CacheResult.Success -> {
+                if (cacheResult.value != null) {
+                    if (shouldReturnCache(cacheResult.value)) {
+                        // cache contains valid data
+                        Log.d("AppDebug", "NetworkBoundResource: return cache with valid data")
+                        // set state event to null, we want to continue showing the progress bar until the cache is updated and showed to the user
+                        // this will only set the current cache, still valid (not expired) but not updated, to be shown to the UI
+                        Log.d(TAG, "CACHE: ${cacheResult.value} ")
+                        emit(returnSuccessCache(cacheResult.value, null))
+                    } 
+                } 
+            }
+        }
+
+        // get data from api and update cache
         val apiResult = safeApiCall(dispatcher) { apiCall.invoke() }
 
         when (apiResult) {
@@ -41,7 +60,6 @@ constructor(
                     )
                 )
             }
-
             is ApiResult.NetworkError -> {
                 emit(
                     DataState.error(
@@ -50,7 +68,6 @@ constructor(
                     )
                 )
             }
-
             is ApiResult.Success -> {
                 if (apiResult.value == null) {
                     emit(
@@ -59,44 +76,41 @@ constructor(
                             stateEvent = stateEvent
                         )
                     )
-                }
-                // if succeed, updates the cache
-                else {
-                    updateCache(apiResult.value as NetworkObj)
+                } else {
+                    Log.d("NetworkBoundResource", "API: ${apiResult.value}")
+                    updateCache(apiResult.value)
                 }
             }
         }
 
-        // ****** STEP 3: VIEW CACHE and MARK JOB COMPLETED ******
-        emit(returnCache(markJobComplete = true))
+        // handle updated cache to show it to the UI
+        emit(handleUpdatedCache())
     }
 
-    private suspend fun returnCache(markJobComplete: Boolean): DataState<ViewState> {
+    // it determines if the current cache should be displayed to the user.
+    // It depends on if the user wants to refresh the data or the cache is empty or expired
+    abstract suspend fun shouldReturnCache(cacheResult: CacheObj?): Boolean
 
-        // makes a cached request and handles the errors
+    private suspend fun handleUpdatedCache(): DataState<ViewState> {
+
         val cacheResult = safeCacheCall(dispatcher) { cacheCall.invoke() }
 
-        var jobCompleteMarker: StateEvent? = null
-        if (markJobComplete) {
-            jobCompleteMarker = stateEvent
-        }
-
-        // CacheRespondHandler gets the cached object and wrap it in a DataState object
         return object : CacheResponseHandler<ViewState, CacheObj>(
             response = cacheResult,
-            stateEvent = jobCompleteMarker
+            stateEvent = stateEvent
         ) {
             override fun handleSuccess(resultObj: CacheObj): DataState<ViewState> {
-                return handleCacheSuccess(resultObj)
+                return returnSuccessCache(resultObj, stateEvent)
             }
-
         }.result
-
     }
 
-    abstract suspend fun updateCache(networkObject: NetworkObj)
+    abstract suspend fun updateCache(networkObj: NetworkObj)
 
-    abstract fun handleCacheSuccess(resultObj: CacheObj): DataState<ViewState> // make sure to return null for stateEvent
+    abstract fun returnSuccessCache(
+        resultObj: CacheObj,
+        stateEvent: StateEvent?
+    ): DataState<ViewState>
 
 
 }

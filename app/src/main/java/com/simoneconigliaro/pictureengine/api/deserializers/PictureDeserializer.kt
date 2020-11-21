@@ -17,21 +17,26 @@ class PictureDeserializer : JsonDeserializer<Picture> {
 
         if (json != null) {
 
-            val jsonObjects = json.asJsonObject
+            val jsonObject = json.asJsonObject
 
-            val id = getString(jsonObjects, "id")
+            val id = getString(jsonObject, "id")
 
-            val urls = jsonObjects.get("urls").asJsonObject
+            val urls = jsonObject.get("urls").asJsonObject
             val regularUrl = getString(urls, "regular")
 
-            val user = jsonObjects.get("user").asJsonObject
+            val user = jsonObject.get("user").asJsonObject
             val username = getString(user, "name")
 
             val profileImage = user.get("profile_image").asJsonObject
             val mediumProfilePicture = getString(profileImage, "medium")
 
-            return Picture(id, regularUrl, username, mediumProfilePicture)
-
+            return Picture(
+                id = id,
+                url = regularUrl,
+                username = username,
+                userPicture = mediumProfilePicture,
+                timestamp = null
+            )
         } else throw Exception("json is null")
 
     }
