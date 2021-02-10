@@ -9,6 +9,7 @@ import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.model.PictureDetail
 import com.simoneconigliaro.pictureengine.repository.MainRepository
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
+import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent.GetListPicturesByQueryEvent
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent.GetListPicturesEvent
 import com.simoneconigliaro.pictureengine.ui.state.MainViewState
 import com.simoneconigliaro.pictureengine.utils.Constants.INVALID_STATE_EVENT
@@ -38,6 +39,12 @@ constructor(
     val viewState: LiveData<MainViewState>
         get() = _viewState
 
+    private val _queries: MutableLiveData<ArrayList<String>> = MutableLiveData()
+
+    val queries: LiveData<ArrayList<String>>
+        get() = _queries
+
+
     val dataChannelManager: DataChannelManager<MainViewState> =
         object : DataChannelManager<MainViewState>() {
 
@@ -58,6 +65,7 @@ constructor(
             }
 
             viewState.searchFragmentViews.listPictures?.let { listPictures ->
+                Log.d(TAG, "handleNewData: $listPictures")
                 setSearchListPictures(listPictures)
             }
 
@@ -89,10 +97,11 @@ constructor(
                         )
                     }
 
-                    is MainStateEvent.GetListPicturesByQueryEvent -> {
-                        Log.d(TAG, "setStateEvent: GetListPicturesByQueryEvent")
+                    is GetListPicturesByQueryEvent -> {
+                        Log.d(TAG, "viewstate setStateEvent: trigged ")
                         mainRepository.getListPicturesByQuery(
                             query = stateEvent.query,
+                            page = getSearchPage(),
                             stateEvent = stateEvent
                         )
                     }
@@ -135,23 +144,39 @@ constructor(
         jobFunction: Flow<DataState<MainViewState>?>
     ) = dataChannelManager.launchJob(stateEvent, jobFunction)
 
-    fun getCurrentViewStateOrNew(): MainViewState {
+    fun clearErrorState(index: Int = 0) {
+        dataChannelManager.clearErrorState(index)
+        onCleared()
+    }
+
+    private fun isJobAlreadyActive(stateEvent: StateEvent): Boolean {
+        return dataChannelManager.isJobAlreadyActive(stateEvent)
+    }
+
+    private fun getCurrentViewStateOrNew(): MainViewState {
         return viewState.value ?: initNewViewState()
     }
-
-    private fun getPage(): Int {
-        return getCurrentViewStateOrNew().listFragmentViews.page ?: 1
-    }
-
 
     private fun setViewState(viewState: MainViewState) {
         _viewState.value = viewState
     }
 
+    private fun getCurrentQueriesOrNew(): ArrayList<String> {
+        return queries.value ?: ArrayList()
+    }
+
+    /**
+     * ListFragmentViews
+     */
+
     private fun setListPictures(listPictures: List<Picture>) {
         val update = getCurrentViewStateOrNew()
         update.listFragmentViews.listPictures = listPictures
         setViewState(update)
+    }
+
+    private fun getPage(): Int {
+        return getCurrentViewStateOrNew().listFragmentViews.page ?: 1
     }
 
     private fun setPage(page: Int) {
@@ -160,19 +185,13 @@ constructor(
         setViewState(update)
     }
 
-    private fun setSearchListPictures(listPictures: List<Picture>) {
-        Log.d(TAG, "setSearchListPictures: $listPictures")
+    private fun incrementPageNumber() {
         val update = getCurrentViewStateOrNew()
-        update.searchFragmentViews.listPictures = listPictures
+        val page = update.copy().listFragmentViews.page ?: 1
+        update.listFragmentViews.page = page.plus(1)
+        Log.d(TAG, "incrementPageNumber: ${getPage()}")
         setViewState(update)
     }
-
-    private fun setPictureDetail(pictureDetail: PictureDetail?) {
-        val update = getCurrentViewStateOrNew()
-        update.detailFragmentViews.pictureDetail = pictureDetail
-        setViewState(update)
-    }
-
 
     fun nextPage() {
         if (!isJobAlreadyActive(GetListPicturesEvent())) {
@@ -184,23 +203,6 @@ constructor(
             TAG,
             "is job already active: ${dataChannelManager.isJobAlreadyActive(GetListPicturesEvent())}"
         )
-    }
-
-    private fun incrementPageNumber() {
-        val update = getCurrentViewStateOrNew()
-        val page = update.copy().listFragmentViews.page ?: 1
-        update.listFragmentViews.page = page.plus(1)
-        Log.d(TAG, "incrementPageNumber: ${getPage()}")
-        setViewState(update)
-    }
-
-    fun clearErrorState(index: Int = 0) {
-        dataChannelManager.clearErrorState(index)
-        onCleared()
-    }
-
-    private fun isJobAlreadyActive(stateEvent: StateEvent): Boolean {
-        return dataChannelManager.isJobAlreadyActive(stateEvent)
     }
 
     private fun resetPage() {
@@ -215,4 +217,145 @@ constructor(
             setStateEvent(GetListPicturesEvent(isRefresh = isRefresh))
         }
     }
+
+    /**
+     * DetailFragmentViews
+     */
+
+    private fun setPictureDetail(pictureDetail: PictureDetail?) {
+        Log.d(TAG, "setPictureDetail: TRIGGERED")
+        val update = getCurrentViewStateOrNew()
+        update.detailFragmentViews.pictureDetail = pictureDetail
+        setViewState(update)
+    }
+
+
+    /**
+     * SearchFragmentViews
+     */
+
+    fun clearSearchFragmentViews() {
+        val update = getCurrentViewStateOrNew()
+        update.searchFragmentViews.listPictures = null
+        update.searchFragmentViews.page = null
+        setViewState(update)
+    }
+
+    private fun setSearchListPictures(newListPictures: List<Picture>?) {
+        val update = getCurrentViewStateOrNew()
+        val currentListPicture = update.searchFragmentViews.listPictures
+        val page = getSearchPage()
+        if (page > 1) {
+            val mergedList = mergeListPictures(currentListPicture, newListPictures)
+            update.searchFragmentViews.listPictures = mergedList
+        } else {
+            update.searchFragmentViews.listPictures = newListPictures
+        }
+
+        setViewState(update)
+    }
+
+    private fun mergeListPictures(
+        currentListPictures: List<Picture>?,
+        newListPictures: List<Picture>?
+    ): ArrayList<Picture>? {
+        val mergedList: ArrayList<Picture> = ArrayList()
+        if (newListPictures != null) {
+            if (currentListPictures != null) {
+                mergedList.addAll(currentListPictures)
+                mergedList.addAll(newListPictures)
+            } else {
+                mergedList.addAll(newListPictures)
+            }
+        }
+
+        Log.d(TAG, "mergedlist: page: ${getSearchPage()}")
+        Log.d(TAG, "mergedlist: ${mergedList.size}")
+        for (item in mergedList) {
+            Log.d(TAG, "mergedlist: ${item.id}")
+        }
+        return mergedList
+    }
+
+    fun restoreSearchFragmentViews(listPictures: List<Picture>, page: Int) {
+        setSearchListPictures(listPictures)
+        setSearchPage(page)
+    }
+
+    fun searchListPicturesByQuery(query: String) {
+        replaceQuery(query)
+        clearSearchFragmentViews()
+        setStateEvent(GetListPicturesByQueryEvent(query))
+    }
+
+    fun searchListPicturesByTag(tag: String) {
+        addQuery(tag)
+        clearSearchFragmentViews()
+        setStateEvent(GetListPicturesByQueryEvent(tag))
+    }
+
+    private fun addQuery(query: String) {
+        val queries = getCurrentQueriesOrNew()
+        queries.add(query)
+        _queries.value = queries
+    }
+
+    private fun replaceQuery(query: String) {
+        val queries = getCurrentQueriesOrNew()
+
+        if (queries.size > 0) {
+            queries[queries.lastIndex] = query
+        } else {
+            queries.add(query)
+        }
+        _queries.value = queries
+    }
+
+    @ExperimentalStdlibApi
+    fun removeLastQuery() {
+        val queries = getCurrentQueriesOrNew()
+        if (queries.size > 0) {
+            queries.removeLast()
+            _queries.value = queries
+        }
+    }
+
+    fun nextSearchPage(query: String) {
+        if (!isJobAlreadyActive(GetListPicturesByQueryEvent(query))) {
+            Log.d(TAG, "merged BlogViewModel: Attempting to load next page...")
+            incrementSearchPageNumber()
+            setStateEvent(GetListPicturesByQueryEvent(query))
+        }
+        Log.d(
+            TAG,
+            "is job already active: ${dataChannelManager.isJobAlreadyActive(
+                GetListPicturesByQueryEvent(query)
+            )}"
+        )
+    }
+
+    private fun getSearchPage(): Int {
+        return getCurrentViewStateOrNew().searchFragmentViews.page ?: 1
+    }
+
+    private fun setSearchPage(page: Int) {
+        val update = getCurrentViewStateOrNew()
+        update.searchFragmentViews.page = page
+        setViewState(update)
+    }
+
+    private fun incrementSearchPageNumber() {
+        val update = getCurrentViewStateOrNew()
+        val page = update.copy().searchFragmentViews.page ?: 1
+        update.searchFragmentViews.page = page.plus(1)
+        setViewState(update)
+    }
+
+    private fun resetSearchPage() {
+        val update = getCurrentViewStateOrNew()
+        update.searchFragmentViews.page = 1
+        setViewState(update)
+    }
+
+
 }

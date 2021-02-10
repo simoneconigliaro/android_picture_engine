@@ -11,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat.getColor
@@ -43,25 +44,67 @@ constructor(private val requestManager: RequestManager) :
 
     private val viewModel: MainViewModel by activityViewModels()
 
-    private lateinit var pictureAdapter: PictureAdapter
+    private val pictureAdapter: PictureAdapter =
+        PictureAdapter(requestManager, this@PictureSearchFragment)
 
     private lateinit var uiController: UIController
 
+    private var query: String? = null
+
+    private var page: Int = 1
+
+    private var focus: Boolean = true
+
+    private var listPictures: List<Picture> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.setupChannel()
         setHasOptionsMenu(true)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
-        initSearchTextInputLayout()
         disableSwipeDownRefreshLayout()
         initRecyclerView()
         subscribeObservers()
+        checkIfListIsEmpty()
+        requestFocusAndShowKeyboard()
+        restoreQuerySearchText()
 
+        recycler_view_search.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastPosition = layoutManager.findLastVisibleItemPosition()
+                if (lastPosition == pictureAdapter.itemCount.minus(1) && pictureAdapter.itemCount != 0) {
+                    Log.d(TAG, "onScrollStateChanged: $query")
+                    query?.let {
+                        viewModel.nextSearchPage(it)
+
+                    }
+                }
+            }
+        })
+
+        search_text_input_layout.editText?.setOnEditorActionListener { _, actionId, _ ->
+
+            query = search_text_input_layout.editText?.text.toString()
+
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                query?.let {
+                    if (it.isNotBlank()) {
+                        pictureAdapter.clear()
+                        viewModel.searchListPicturesByQuery(it)
+                        clearFocusAndHideKeyboard()
+
+                    }
+                    return@setOnEditorActionListener true
+                }
+            }
+            return@setOnEditorActionListener false
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -88,40 +131,69 @@ constructor(private val requestManager: RequestManager) :
     }
 
     private fun subscribeObservers() {
+
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
 
+
             if (viewState != null) {
+
+                // Our view model doesn't keep track of all the list searched, it can only save the most recent one
+                // Since we are not saving all the search list pictures and pages while navigating through the fragments
+                // we need to restore them in the view model once we the user starts navigating back
+                // so if the user scrolls down for new pages they will get the correct ones (page and query) added to the ones already shown
+                if (listPictures.isNotEmpty() && viewState.searchFragmentViews.listPictures == null) {
+                    viewModel.restoreSearchFragmentViews(listPictures, page)
+                }
+
                 viewState.searchFragmentViews.listPictures?.let {
-                    Log.d(TAG, "subscribeObservers: $it")
 
-                    if (it.isNotEmpty()) {
 
-                        pictureAdapter.submitList(it)
-
+                    Log.d(TAG, "from viewmodel subscribeObservers: $it")
+                    if (it.isNotEmpty() && it != listPictures) {
+                        listPictures = it
+                        pictureAdapter.submitList(listPictures)
                         layout_empty_list.visibility = View.GONE
-                    } else {
-                        layout_empty_list.visibility = View.VISIBLE
                     }
+
+                    // if the list is empty, the search didn't show any result
+                    if (it.isEmpty()) showNoResults()
+                }
+
+                viewState.searchFragmentViews.page?.let {
+                    if (it != page) {
+                        page = it
+                    }
+                }
+
+            }
+        })
+
+        viewModel.queries.observe(viewLifecycleOwner, Observer { queries ->
+            Log.d(TAG, "subscribeObservers: $queries")
+            if (queries.size > 0) {
+                if (queries.last() != query) {
+                    query = queries.last()
+                    search_text_input_layout.editText!!.setText(query)
                 }
             }
 
+        })
 
-            viewModel.shouldDisplayProgressBar.observe(viewLifecycleOwner, Observer {
-                swipe_refresh_layout_search.isRefreshing = it
-            })
+        viewModel.shouldDisplayProgressBar.observe(viewLifecycleOwner, Observer {
+            swipe_refresh_layout_search.isRefreshing = it
+        })
 
-            viewModel.errorState.observe(viewLifecycleOwner, Observer { errorState ->
-                errorState?.let {
-                    uiController.onErrorReceived(
-                        errorState = it,
-                        errorStateCallback = object : ErrorStateCallback {
-                            override fun removeErrorFromStack() {
-                                viewModel.clearErrorState(0)
-                            }
+        viewModel.errorState.observe(viewLifecycleOwner, Observer { errorState ->
+            errorState?.let {
+                uiController.onErrorReceived(
+                    errorState = it,
+                    errorStateCallback = object : ErrorStateCallback {
+                        override fun removeErrorFromStack() {
+                            viewModel.clearErrorState(0)
                         }
-                    )
-                }
-            })
+                    }
+                )
+            }
         })
     }
 
@@ -133,37 +205,55 @@ constructor(private val requestManager: RequestManager) :
         }
     }
 
-    private fun initSearchTextInputLayout() {
+    @ExperimentalStdlibApi
+    override fun onDetach() {
+        super.onDetach()
+        viewModel.removeLastQuery()
+        viewModel.clearSearchFragmentViews()
+    }
 
-        search_text_input_layout.editText?.requestFocus()
-        search_text_input_layout.editText?.showKeyboard()
-
-        search_text_input_layout.editText?.setOnEditorActionListener { _, actionId, _ ->
-
-            val query = search_text_input_layout.editText?.text.toString()
-
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (query.isNotBlank()) {
-                    pictureAdapter.submitList(null)
-                    viewModel.setStateEvent(MainStateEvent.GetListPicturesByQueryEvent(query))
-                    search_text_input_layout.editText?.hideKeyboard()
-                }
-                return@setOnEditorActionListener true
-            }
-            return@setOnEditorActionListener false
+    private fun requestFocusAndShowKeyboard() {
+        if (focus) {
+            search_text_input_layout.editText?.requestFocus()
+            search_text_input_layout.editText?.showKeyboard()
+            focus = false
         }
     }
 
-    private fun disableSwipeDownRefreshLayout(){
+    private fun clearFocusAndHideKeyboard() {
+        search_text_input_layout.editText?.clearFocus()
+        search_text_input_layout.editText?.hideKeyboard()
+    }
+
+    private fun disableSwipeDownRefreshLayout() {
         swipe_refresh_layout_search.isEnabled = false
+    }
+
+    private fun checkIfListIsEmpty() {
+        if (pictureAdapter.isEmpty()) {
+            layout_empty_list.visibility = View.VISIBLE
+        } else {
+            layout_empty_list.visibility = View.GONE
+        }
+    }
+
+    private fun showNoResults() {
+        layout_empty_list.visibility = View.VISIBLE
+        tv_bold_info.text = getString(R.string.no_results)
+        tv_regular_info.text = getString(R.string.search_something_else)
     }
 
     private fun initRecyclerView() {
         recycler_view_search.apply {
             layoutManager = LinearLayoutManager(this@PictureSearchFragment.context)
             addItemDecoration(TopSpacingItemDecoration(48))
-            pictureAdapter = PictureAdapter(requestManager, this@PictureSearchFragment)
             adapter = pictureAdapter
+        }
+    }
+
+    private fun restoreQuerySearchText() {
+        query?.let {
+            search_text_input_layout.editText!!.setText(query)
         }
     }
 

@@ -4,17 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
-import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.utils.*
 import com.simoneconigliaro.pictureengine.utils.Constants.NEXT_PAGE
@@ -22,9 +19,6 @@ import com.simoneconigliaro.pictureengine.utils.Constants.REFRESH
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_picture_list.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import retrofit2.http.GET
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -53,7 +47,9 @@ constructor(
         initRecyclerView()
         subscribeObservers()
 
-        swipe_refresh_layout.setOnRefreshListener { setEvent(REFRESH) }
+        swipe_refresh_layout.setOnRefreshListener {
+            checkNetworkAndSetEvent(REFRESH)
+        }
 
         recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -62,6 +58,7 @@ constructor(
         })
 
         fab_search.setOnClickListener(View.OnClickListener {
+            viewModel.clearSearchFragmentViews()
             findNavController().navigate(R.id.action_pictureListFragment_to_pictureSearchFragment)
         })
 
@@ -72,9 +69,10 @@ constructor(
                 super.onScrollStateChanged(recyclerView, newState)
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == pictureAdapter.itemCount.minus(1)) {
+                // if last position is -1 means the recyclerView is empty
+                if (lastPosition == pictureAdapter.itemCount.minus(1) && lastPosition != -1 ) {
                     Log.d(TAG, "Attempting to load next page...")
-                    setEvent(NEXT_PAGE)
+                    checkNetworkAndSetEvent(NEXT_PAGE)
                 }
             }
         })
@@ -110,6 +108,7 @@ constructor(
         })
 
         viewModel.shouldDisplayProgressBar.observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "subscribeObservers: refreshing: $it")
             swipe_refresh_layout.isRefreshing = it
 
         })
@@ -146,18 +145,22 @@ constructor(
         findNavController().navigate(R.id.action_pictureListFragment_to_pictureDetailFragment)
     }
 
-    private fun setEvent(event: String){
+    private fun checkNetworkAndSetEvent(event: String) {
 
         if (!NetworkUtil.isNetworkAvailable(context)) {
             requireContext().showToast(getString(R.string.unable_to_load_next_page))
             Log.d(TAG, "Unable to load next page: No internet connection.")
-            if(swipe_refresh_layout.isRefreshing) swipe_refresh_layout.isRefreshing = false
+            if (swipe_refresh_layout.isRefreshing) swipe_refresh_layout.isRefreshing = false
             return
         }
 
-        when(event) {
-            REFRESH -> {viewModel.loadFirstPage(isRefresh = true) }
-            NEXT_PAGE -> {viewModel.nextPage()}
+        when (event) {
+            REFRESH -> {
+                viewModel.loadFirstPage(isRefresh = true)
+            }
+            NEXT_PAGE -> {
+                viewModel.nextPage()
+            }
         }
     }
 }

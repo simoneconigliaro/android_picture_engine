@@ -20,4 +20,6 @@
     <string name="why_don_t_you_search_for_something">Why don\'t you search for something</string>
     <string name="search">Search</string>
     <string name="downloading">Downloading…</string>
+    <string name="no_results">Sorry, no results matching your search</string>
+    <string name="search_something_else">Why don\'t you search for something else</string>
 </resources>

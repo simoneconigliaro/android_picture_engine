@@ -46,6 +46,11 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_pictureDetailFragment_to_pictureSearchFragment"
+            app:destination="@id/pictureSearchFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/fade_out"/>
 
     </fragment>
 
@@ -67,7 +72,11 @@
         tools:layout="@layout/fragment_picture_search" >
         <action
             android:id="@+id/action_pictureSearchFragment_to_pictureDetailFragment"
-            app:destination="@id/pictureDetailFragment" />
+            app:destination="@id/pictureDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
 </navigation>

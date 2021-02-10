@@ -1,5 +1,6 @@
 package com.simoneconigliaro.pictureengine.repository
 
+import android.util.Log
 import com.simoneconigliaro.pictureengine.utils.ApiResult
 import com.simoneconigliaro.pictureengine.utils.CacheResult
 import com.simoneconigliaro.pictureengine.utils.Constants.CACHE_ERROR_TIMEOUT

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.model.PictureDetail
+import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_picture_detail.*
@@ -186,7 +187,8 @@ constructor(
     }
 
     override fun onItemSelected(tag: String) {
-        Toast.makeText(context, tag, Toast.LENGTH_LONG).show()
+        viewModel.searchListPicturesByTag(tag)
+        findNavController().navigate(R.id.action_pictureDetailFragment_to_pictureSearchFragment)
     }
 
     private fun initToolBar() {

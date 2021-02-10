@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface MainRepository {
     fun getListPictures(isRefresh: Boolean, isNextPage: Boolean, page: Int, stateEvent: StateEvent): Flow<DataState<MainViewState>>
 
-    fun getListPicturesByQuery(query: String, stateEvent: StateEvent): Flow<DataState<MainViewState>>
+    fun getListPicturesByQuery(query: String, page: Int, stateEvent: StateEvent): Flow<DataState<MainViewState>>
 
     fun getPictureById(id: String, stateEvent: StateEvent): Flow<DataState<MainViewState>>
 }

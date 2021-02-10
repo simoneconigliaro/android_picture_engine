@@ -129,10 +129,11 @@ constructor(
 
     override fun getListPicturesByQuery(
         query: String,
+        page: Int,
         stateEvent: StateEvent
     ): Flow<DataState<MainViewState>> = flow {
         val apiResult = safeApiCall(IO) {
-            apiService.getListPictureByQuery(API_KEY, query)
+            apiService.getListPictureByQuery(API_KEY, query, page)
         }
         emit(
             // this expression returns a dataState (contains data or error) which will be emitted as a flow
@@ -142,6 +143,8 @@ constructor(
                 stateEvent = stateEvent
             ) {
                 override fun handleSuccess(resultObj: SearchResponse): DataState<MainViewState> {
+
+                    Log.d(TAG, "handleSuccess: $resultObj")
                     val viewState = MainViewState(
                         searchFragmentViews = MainViewState.SearchFragmentViews(
                             listPictures = resultObj.listPictures

@@ -27,7 +27,7 @@
                 app:endIconTint="@color/colorPrimary"
                 app:hintEnabled="false">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -36,7 +36,7 @@
                     android:imeOptions="actionSearch"
                     android:importantForAutofill="no"
                     android:inputType="text"
-                    android:maxLines="1" />
+                    android:maxLines="1"/>
 
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -64,7 +64,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="match_parent"
@@ -73,6 +73,7 @@
             android:src="@drawable/ic_ghost" />
 
         <TextView
+            android:id="@+id/tv_bold_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -81,6 +82,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_regular_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"

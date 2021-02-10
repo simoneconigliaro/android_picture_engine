@@ -2,6 +2,7 @@ package com.simoneconigliaro.pictureengine.ui
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,8 +116,16 @@ constructor(
         differ.submitList(newList)
     }
 
+    fun clear(){
+        differ.submitList(null)
+    }
+
     fun getList(): List<Picture> {
         return differ.currentList
+    }
+
+    fun isEmpty() : Boolean {
+        return differ.currentList.isEmpty()
     }
 
     interface Interaction {
