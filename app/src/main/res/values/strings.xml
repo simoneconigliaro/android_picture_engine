@@ -9,7 +9,7 @@
     <string name="exposure_time">Exposure Time</string>
     <string name="iso">ISO</string>
     <string name="dimensions">Dimensions</string>
-    <string name="set_wallpaper">SET WALLPAPER</string>
+    <string name="set_wallpaper">set wallpaper</string>
     <string name="action_set_wallpaper">Set Wallpaper</string>
     <string name="error">Something went wrong, try again</string>
     <string name="download_complete">Download complete</string>
@@ -22,4 +22,5 @@
     <string name="downloading">Downloading…</string>
     <string name="no_results">Sorry, no results matching your search</string>
     <string name="search_something_else">Why don\'t you search for something else</string>
+    <string name="action_home">Home</string>
 </resources>

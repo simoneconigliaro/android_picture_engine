@@ -6,7 +6,7 @@ import com.simoneconigliaro.pictureengine.utils.StateEvent
 
 sealed class MainStateEvent : StateEvent {
 
-    class GetListPicturesEvent(val isRefresh: Boolean = false, val isNextPage: Boolean = false) : MainStateEvent() {
+    class GetListPicturesEvent(val orderBy: String, val isRefresh: Boolean = false, val isNextPage: Boolean = false) : MainStateEvent() {
 
         override fun errorInfo(): String {
             return UNABLE_TO_RETRIEVE_PICTURES

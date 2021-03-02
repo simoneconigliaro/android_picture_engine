@@ -26,7 +26,10 @@ object Constants {
 
     const val UNABLE_TO_RETRIEVE_DETAILS_PICTURE = "Unable to retrieve details picture"
 
+    const val FIRST_PAGE = "first_page"
+
     const val REFRESH = "refresh"
+
     const val NEXT_PAGE = "next_page"
 
 

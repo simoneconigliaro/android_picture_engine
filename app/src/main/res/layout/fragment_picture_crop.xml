@@ -22,11 +22,21 @@
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
-            app:titleTextColor="@color/colorPrimary"
             android:id="@+id/set_wallpaper_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextAppearance="@style/Toolbar.TitleText"/>
+            android:background="@color/colorPrimaryDark">
+
+            <TextView
+                style="@style/TextToolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textAllCaps="true"
+                android:text="@string/set_wallpaper" />
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -36,12 +36,13 @@ constructor(
         isRefresh: Boolean,
         isNextPage: Boolean,
         page: Int,
+        orderBy: String,
         stateEvent: StateEvent
     ): Flow<DataState<MainViewState>> {
         return object : NetworkBoundResource<List<Picture>, List<Picture>, MainViewState>(
             dispatcher = IO,
             stateEvent = stateEvent,
-            apiCall = { apiService.getListPictures(API_KEY, page) },
+            apiCall = { apiService.getListPictures(API_KEY, page, orderBy) },
             cacheCall = { pictureDao.getAllPictures() }
         ) {
 

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -69,7 +70,7 @@ constructor(private val requestManager: RequestManager) :
         initRecyclerView()
         subscribeObservers()
         checkIfListIsEmpty()
-        requestFocusAndShowKeyboard()
+        viewModel.notifyQueriesHaveChanged()
         restoreQuerySearchText()
 
         recycler_view_search.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -82,7 +83,6 @@ constructor(private val requestManager: RequestManager) :
                     Log.d(TAG, "onScrollStateChanged: $query")
                     query?.let {
                         viewModel.nextSearchPage(it)
-
                     }
                 }
             }
@@ -95,10 +95,9 @@ constructor(private val requestManager: RequestManager) :
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 query?.let {
                     if (it.isNotBlank()) {
-                        pictureAdapter.clear()
                         viewModel.searchListPicturesByQuery(it)
                         clearFocusAndHideKeyboard()
-
+                        recycler_view_search.scrollToPosition(0)
                     }
                     return@setOnEditorActionListener true
                 }
@@ -126,6 +125,11 @@ constructor(private val requestManager: RequestManager) :
                 findNavController().popBackStack()
                 return true
             }
+            R.id.action_nav_main_page -> {
+                findNavController().navigate(R.id.action_pictureSearchFragment_to_pictureListFragment)
+                return true
+            }
+
         }
         return super.onOptionsItemSelected(item)
     }
@@ -169,14 +173,21 @@ constructor(private val requestManager: RequestManager) :
         })
 
         viewModel.queries.observe(viewLifecycleOwner, Observer { queries ->
-            Log.d(TAG, "subscribeObservers: $queries")
-            if (queries.size > 0) {
-                if (queries.last() != query) {
-                    query = queries.last()
-                    search_text_input_layout.editText!!.setText(query)
-                }
-            }
+            Log.d(TAG, "subscribeObservers queries: $queries")
 
+            if (queries != null) {
+
+                if (queries.size > 0) {
+                    if (queries.last() != query) {
+                        query = queries.last()
+                        search_text_input_layout.editText!!.setText(query)
+                    }
+                } else {
+                    requestFocusAndShowKeyboard()
+                }
+            } else {
+                requestFocusAndShowKeyboard()
+            }
         })
 
         viewModel.shouldDisplayProgressBar.observe(viewLifecycleOwner, Observer {
@@ -210,6 +221,11 @@ constructor(private val requestManager: RequestManager) :
         super.onDetach()
         viewModel.removeLastQuery()
         viewModel.clearSearchFragmentViews()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        clearFocusAndHideKeyboard()
     }
 
     private fun requestFocusAndShowKeyboard() {
@@ -260,5 +276,10 @@ constructor(private val requestManager: RequestManager) :
     override fun onItemSelected(id: String) {
         viewModel.setStateEvent(MainStateEvent.GetPictureDetailEvent(id))
         findNavController().navigate(R.id.action_pictureSearchFragment_to_pictureDetailFragment)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 }

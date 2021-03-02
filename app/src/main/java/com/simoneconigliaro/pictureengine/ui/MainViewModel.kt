@@ -93,6 +93,7 @@ constructor(
                             isRefresh = stateEvent.isRefresh,
                             isNextPage = stateEvent.isNextPage,
                             page = getPage(),
+                            orderBy = stateEvent.orderBy,
                             stateEvent = stateEvent
                         )
                     }
@@ -193,15 +194,15 @@ constructor(
         setViewState(update)
     }
 
-    fun nextPage() {
-        if (!isJobAlreadyActive(GetListPicturesEvent())) {
+    fun nextPage(orderBy: String) {
+        if (!isJobAlreadyActive(GetListPicturesEvent(orderBy))) {
             Log.d(TAG, "BlogViewModel: Attempting to load next page...")
             incrementPageNumber()
-            setStateEvent(GetListPicturesEvent(isNextPage = true))
+            setStateEvent(GetListPicturesEvent(orderBy = orderBy, isNextPage = true))
         }
         Log.d(
             TAG,
-            "is job already active: ${dataChannelManager.isJobAlreadyActive(GetListPicturesEvent())}"
+            "is job already active: ${dataChannelManager.isJobAlreadyActive(GetListPicturesEvent(orderBy))}"
         )
     }
 
@@ -211,10 +212,10 @@ constructor(
         setViewState(update)
     }
 
-    fun loadFirstPage(isRefresh: Boolean) {
-        if (!isJobAlreadyActive(GetListPicturesEvent(isRefresh = isRefresh))) {
+    fun refresh(orderBy: String, isRefresh: Boolean) {
+        if (!isJobAlreadyActive(GetListPicturesEvent(orderBy = orderBy, isRefresh = isRefresh))) {
             resetPage()
-            setStateEvent(GetListPicturesEvent(isRefresh = isRefresh))
+            setStateEvent(GetListPicturesEvent(orderBy = orderBy, isRefresh = isRefresh))
         }
     }
 
@@ -240,7 +241,6 @@ constructor(
         update.searchFragmentViews.page = null
         setViewState(update)
     }
-
     private fun setSearchListPictures(newListPictures: List<Picture>?) {
         val update = getCurrentViewStateOrNew()
         val currentListPicture = update.searchFragmentViews.listPictures
@@ -311,6 +311,13 @@ constructor(
         _queries.value = queries
     }
 
+    // function to trigger the observer to observe queries even if they have not changed
+    fun notifyQueriesHaveChanged() {
+        if (_queries.value == null) {
+            _queries.value = _queries.value
+        }
+    }
+
     @ExperimentalStdlibApi
     fun removeLastQuery() {
         val queries = getCurrentQueriesOrNew()
@@ -350,12 +357,5 @@ constructor(
         update.searchFragmentViews.page = page.plus(1)
         setViewState(update)
     }
-
-    private fun resetSearchPage() {
-        val update = getCurrentViewStateOrNew()
-        update.searchFragmentViews.page = 1
-        setViewState(update)
-    }
-
 
 }

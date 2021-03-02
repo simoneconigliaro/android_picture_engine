@@ -2,9 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_set_wallpaper"
-        android:icon="@drawable/ic_check"
-        android:title="@string/action_set_wallpaper"
+
+    <item
+        android:id="@+id/action_nav_main_page"
+        android:icon="@drawable/ic_home"
+        android:title="@string/action_home"
         app:showAsAction="always" />
 
 </menu>

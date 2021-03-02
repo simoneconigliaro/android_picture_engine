@@ -22,7 +22,7 @@
             android:id="@+id/action_pictureListFragment_to_pictureSearchFragment"
             app:destination="@id/pictureSearchFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/fade_out"/>
+            app:popExitAnim="@anim/fade_out" />
 
     </fragment>
 
@@ -50,7 +50,7 @@
             android:id="@+id/action_pictureDetailFragment_to_pictureSearchFragment"
             app:destination="@id/pictureSearchFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/fade_out"/>
+            app:popExitAnim="@anim/fade_out" />
 
     </fragment>
 
@@ -69,7 +69,7 @@
         android:id="@+id/pictureSearchFragment"
         android:name="com.simoneconigliaro.pictureengine.ui.PictureSearchFragment"
         android:label="fragment_picture_search"
-        tools:layout="@layout/fragment_picture_search" >
+        tools:layout="@layout/fragment_picture_search">
         <action
             android:id="@+id/action_pictureSearchFragment_to_pictureDetailFragment"
             app:destination="@id/pictureDetailFragment"
@@ -77,6 +77,12 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_pictureSearchFragment_to_pictureListFragment"
+            app:destination="@id/pictureListFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/main_nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

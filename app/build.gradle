@@ -14,6 +14,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -93,6 +94,17 @@ dependencies {
 
     def android_image_cropper_version = "2.8.+"
     implementation "com.theartofdev.edmodo:android-image-cropper:$android_image_cropper_version"
+
+    def material_dialog_version = "3.2.1"
+    implementation "com.afollestad.material-dialogs:core:$material_dialog_version"
+    implementation "com.afollestad.material-dialogs:lifecycle:$material_dialog_version"
+
+    // Preferences DataStore
+    def datastore_preferences_version = "1.0.0-alpha04"
+    implementation "androidx.datastore:datastore-preferences:$datastore_preferences_version"
+
+    // to fit requested classes in a single dex file
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
 
 kapt {

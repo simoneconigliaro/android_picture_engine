@@ -91,9 +91,9 @@ class PictureCropFragment : Fragment(R.layout.fragment_picture_crop) {
     private fun initToolBar() {
         if (activity is AppCompatActivity) {
             (activity as AppCompatActivity).setSupportActionBar(set_wallpaper_tool_bar)
-            (activity as AppCompatActivity).supportActionBar?.title = resources.getString(R.string.set_wallpaper)
+            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
             (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            (activity as AppCompatActivity).supportActionBar?.setHomeButtonEnabled(true);
+            (activity as AppCompatActivity).supportActionBar?.setHomeButtonEnabled(true)
         }
     }
 

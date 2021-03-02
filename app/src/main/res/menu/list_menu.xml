@@ -7,5 +7,4 @@
         android:id="@+id/action_order"
         android:title="@string/action_sort"
         app:showAsAction="always" />
-
 </menu>

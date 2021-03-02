@@ -16,7 +16,8 @@ interface ApiService {
     @GET("photos/")
     suspend fun getListPictures(
         @Query("client_id") apiKey: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("order_by") orderBy: String
     ): List<Picture>
 
     @GET("search/photos/")
