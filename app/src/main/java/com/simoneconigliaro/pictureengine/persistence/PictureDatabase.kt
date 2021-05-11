@@ -17,5 +17,4 @@ abstract class PictureDatabase : RoomDatabase() {
 
     abstract fun pictureDao(): PictureDao
 
-
 }

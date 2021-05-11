@@ -23,6 +23,9 @@
             app:destination="@id/pictureSearchFragment"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_pictureListFragment_to_bottomSheetFragment"
+            app:destination="@id/bottomSheetFragment" />
 
     </fragment>
 
@@ -65,6 +68,7 @@
         android:name="com.simoneconigliaro.pictureengine.ui.PictureCropFragment"
         android:label="fragment_picture_crop"
         tools:layout="@layout/fragment_picture_crop" />
+
     <fragment
         android:id="@+id/pictureSearchFragment"
         android:name="com.simoneconigliaro.pictureengine.ui.PictureSearchFragment"
@@ -84,5 +88,24 @@
             app:popUpTo="@id/main_nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
+
+    <dialog
+        android:id="@+id/bottomSheetFragment"
+        android:name="com.simoneconigliaro.pictureengine.ui.BottomSheetFragment"
+        android:label="BottomSheetFragment" >
+        <action
+            android:id="@+id/action_bottomSheetFragment_to_settingThemeFragment"
+            app:destination="@id/settingThemeFragment" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/settingThemeFragment"
+        android:name="com.simoneconigliaro.pictureengine.ui.SettingThemeFragment"
+        android:label="SettingThemeFragment" >
+        <action
+            android:id="@+id/action_settingThemeFragment_to_pictureListFragment"
+            app:destination="@id/pictureListFragment" />
+    </fragment>
+
 
 </navigation>

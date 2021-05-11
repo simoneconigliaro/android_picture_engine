@@ -9,13 +9,12 @@
         android:id="@+id/cropImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
+        android:background="@android:color/black"
         app:cropFixAspectRatio="true"
         app:cropInitialCropWindowPaddingRatio="0"
         app:cropScaleType="fitCenter" />
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@null"
@@ -24,16 +23,15 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/set_wallpaper_tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark">
+            android:layout_height="wrap_content">
 
             <TextView
-                style="@style/TextToolbar"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:letterSpacing="0.2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                android:textAllCaps="true"
+                android:textColor="@color/textActionBarColor"
                 android:text="@string/set_wallpaper" />
 
         </androidx.appcompat.widget.Toolbar>

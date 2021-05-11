@@ -3,7 +3,7 @@ package com.simoneconigliaro.pictureengine.fragments
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.bumptech.glide.RequestManager
-import com.simoneconigliaro.pictureengine.api.ApiService
+import com.simoneconigliaro.pictureengine.persistence.PreferencesManager
 import com.simoneconigliaro.pictureengine.ui.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -17,7 +17,7 @@ class MainFragmentFactory
 @Inject
 constructor(
     private val requestManager: RequestManager,
-    private val apiService: ApiService
+    private val preferencesManager: PreferencesManager
 ) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
@@ -25,7 +25,7 @@ constructor(
         when (className) {
 
             PictureListFragment::class.java.name -> {
-                return PictureListFragment(requestManager)
+                return PictureListFragment(requestManager, preferencesManager)
             }
             PictureDetailFragment::class.java.name -> {
                 return PictureDetailFragment(requestManager)
@@ -38,6 +38,9 @@ constructor(
             }
             PictureSearchFragment::class.java.name -> {
                 return PictureSearchFragment(requestManager)
+            }
+            SettingThemeFragment::class.java.name -> {
+                return SettingThemeFragment(preferencesManager)
             }
             else -> {
                 return super.instantiate(classLoader, className)

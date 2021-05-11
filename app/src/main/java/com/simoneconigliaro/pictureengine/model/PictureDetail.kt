@@ -65,7 +65,4 @@ data class PictureDetail(
     @ColumnInfo(name = "timestamp")
     var timestamp: Long?
 
-) {
-
-
-}
+)

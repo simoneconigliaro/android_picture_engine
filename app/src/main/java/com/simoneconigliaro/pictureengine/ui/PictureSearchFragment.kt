@@ -9,16 +9,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +22,6 @@ import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_picture_list.*
 import kotlinx.android.synthetic.main.fragment_picture_search.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -151,7 +144,6 @@ constructor(private val requestManager: RequestManager) :
 
                 viewState.searchFragmentViews.listPictures?.let {
 
-
                     Log.d(TAG, "from viewmodel subscribeObservers: $it")
                     if (it.isNotEmpty() && it != listPictures) {
                         listPictures = it
@@ -160,7 +152,10 @@ constructor(private val requestManager: RequestManager) :
                     }
 
                     // if the list is empty, the search didn't show any result
-                    if (it.isEmpty()) showNoResults()
+                    if (it.isEmpty()){
+                        pictureAdapter.clear()
+                        showNoResults()
+                    }
                 }
 
                 viewState.searchFragmentViews.page?.let {

@@ -17,11 +17,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
-import kotlin.math.log
-
 
 @FlowPreview
 class MainRepositoryImpl
@@ -231,7 +228,6 @@ constructor(
             }
         }.result
     }
-
 
     private fun getCurrentPage(listPictures: List<Picture>): Int {
         return if (listPictures.isNotEmpty()) listPictures.last().page else 1

@@ -20,7 +20,6 @@ class PictureDetailDeserializer : JsonDeserializer<PictureDetail> {
 
         if (json != null) {
 
-
             val jsonObjects = json.asJsonObject
 
             val id = getString(jsonObjects, "id")
@@ -49,7 +48,6 @@ class PictureDetailDeserializer : JsonDeserializer<PictureDetail> {
             val locationName = getString(location, "name")
 
             val cameraInfo = jsonObjects.get("exif").asJsonObject
-            val cameraBrand = getString(cameraInfo, "make")
             val cameraModel = getString(cameraInfo, "model")
             val cameraExposureTime = getString(cameraInfo, "exposure_time")
             val cameraAperture = getString(cameraInfo, "aperture")

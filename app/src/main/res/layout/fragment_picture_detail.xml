@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     tools:context=".ui.PictureDetailFragment">
 
 
@@ -64,15 +63,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_username_detail"
                 tools:text="London, Uk" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button_download"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Download"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,7 +87,7 @@
                 android:id="@+id/iv_likes_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_favorite"
+                android:src="@drawable/ic_like"
                 app:layout_constraintBottom_toBottomOf="@id/group_likes"
                 app:layout_constraintEnd_toStartOf="@id/tv_likes_detail"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -131,7 +121,7 @@
                 android:id="@+id/iv_views_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_visibility"
+                android:src="@drawable/ic_view"
                 app:layout_constraintBottom_toBottomOf="@id/group_views"
                 app:layout_constraintEnd_toStartOf="@id/tv_views_detail"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -228,7 +218,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="24dp"
                 android:text="@string/camera"
                 android:textStyle="bold"
@@ -255,7 +245,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="24dp"
                 android:text="@string/aperture"
                 android:textStyle="bold"
@@ -390,7 +380,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
                 android:background="#EEEEEE"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -424,13 +414,31 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:src="@drawable/ic_download"
+        app:maxImageSize="24dp"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_anchor="@id/iv_picture_detail"
+        app:layout_anchorGravity="end|bottom"
+        app:tint="@android:color/white" />
+
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_set_wallpaper"
-        android:layout_margin="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorAccent"
         android:text="@string/set_wallpaper"
-        app:icon="@drawable/ic_download" />
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:icon="@drawable/ic_wallpaper"
+        app:iconTint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

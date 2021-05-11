@@ -17,6 +17,7 @@ import com.simoneconigliaro.pictureengine.model.Picture
 import com.simoneconigliaro.pictureengine.model.PictureDetail
 import com.simoneconigliaro.pictureengine.api.responses.SearchResponse
 import com.simoneconigliaro.pictureengine.persistence.PictureDatabase
+import com.simoneconigliaro.pictureengine.persistence.PreferencesManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,10 +69,15 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun providePreferencesManager(@ApplicationContext context: Context) : PreferencesManager {
+        return PreferencesManager(context)
+    }
+
+    @Singleton
+    @Provides
     fun provideRequestOptions(): RequestOptions {
         return RequestOptions
-            .placeholderOf(R.drawable.default_image)
-            .error(R.drawable.default_image)
+            .errorOf(R.drawable.default_image)
     }
 
     @Singleton

@@ -6,5 +6,6 @@
         android:icon="@drawable/ic_sort"
         android:id="@+id/action_order"
         android:title="@string/action_sort"
+        android:iconTint="@color/iconColor"
         app:showAsAction="always" />
 </menu>

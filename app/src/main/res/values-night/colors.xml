@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1F1F1F</color>
+    <color name="colorAccent">#1F1F1F</color>
+    <color name="actionBarColor">#1F1F1F</color>
+    <color name="textColor">@android:color/white</color>
+    <color name="iconColor">@android:color/white</color>
+    <color name="bgTagItem">@android:color/black</color>
+</resources>

@@ -100,7 +100,7 @@ dependencies {
     implementation "com.afollestad.material-dialogs:lifecycle:$material_dialog_version"
 
     // Preferences DataStore
-    def datastore_preferences_version = "1.0.0-alpha04"
+    def datastore_preferences_version = "1.0.0-beta01"
     implementation "androidx.datastore:datastore-preferences:$datastore_preferences_version"
 
     // to fit requested classes in a single dex file

@@ -3,14 +3,11 @@ package com.simoneconigliaro.pictureengine.ui
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.preferencesKey
-import androidx.datastore.preferences.createDataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -18,29 +15,26 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.materialdialogs.DialogCallback
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.callbacks.onDismiss
-import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
+import com.simoneconigliaro.pictureengine.persistence.PreferencesManager
 import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.utils.*
 import com.simoneconigliaro.pictureengine.utils.Constants.NEXT_PAGE
 import com.simoneconigliaro.pictureengine.utils.Constants.REFRESH
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_picture_crop.*
 import kotlinx.android.synthetic.main.fragment_picture_list.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class PictureListFragment
 constructor(
-    private val requestManager: RequestManager
+    private val requestManager: RequestManager,
+    private val preferencesManager: PreferencesManager
 ) : Fragment(R.layout.fragment_picture_list), PictureAdapter.Interaction {
 
     private val TAG = "ListFragment"
@@ -51,29 +45,25 @@ constructor(
 
     private lateinit var pictureAdapter: PictureAdapter
 
-    private lateinit var dataStore: DataStore<Preferences>
+    lateinit var sortOrder: String
 
-    private val ORDER_BY_KEY = "order_by"
-
-    lateinit var orderBy: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         viewModel.setupChannel()
-        dataStore = requireContext().createDataStore(name = "sort_list")
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolBar()
+        initBottomAppBar()
         initData()
         initRecyclerView()
         subscribeObservers()
 
-
-
         swipe_refresh_layout.setOnRefreshListener {
-            checkNetworkAndSetEvent(REFRESH, orderBy)
+            checkNetworkAndSetEvent(REFRESH, sortOrder)
         }
 
         recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -87,7 +77,6 @@ constructor(
             findNavController().navigate(R.id.action_pictureListFragment_to_pictureSearchFragment)
         })
 
-
         recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -97,26 +86,11 @@ constructor(
                 // if last position is -1 means the recyclerView is empty
                 if (lastPosition == pictureAdapter.itemCount.minus(1) && lastPosition != -1) {
                     Log.d(TAG, "Attempting to load next page...")
-                    checkNetworkAndSetEvent(NEXT_PAGE, orderBy)
+                    checkNetworkAndSetEvent(NEXT_PAGE, sortOrder)
                 }
             }
         })
-
-        bottom_app_bar.setOnMenuItemClickListener { menuItem ->
-
-            when (menuItem.itemId) {
-
-                R.id.action_order -> {
-                    showMaterialDialog()
-                    true
-                }
-                else -> {
-                    false
-                }
-            }
-        }
     }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -169,9 +143,9 @@ constructor(
 
     private fun initData() {
         lifecycleScope.launch {
-            orderBy = readPreferences(ORDER_BY_KEY)
-            list_toolbar_title.text = orderBy
-            viewModel.setStateEvent(MainStateEvent.GetListPicturesEvent(orderBy))
+            sortOrder = preferencesManager.getSortOrder()
+            list_toolbar_title.text = sortOrder
+            viewModel.setStateEvent(MainStateEvent.GetListPicturesEvent(sortOrder))
         }
     }
 
@@ -184,10 +158,9 @@ constructor(
         }
     }
 
-    private fun initToolBar() {
+    private fun initBottomAppBar() {
         if (activity is AppCompatActivity) {
-            (activity as AppCompatActivity).setSupportActionBar(list_toolbar)
-
+            (activity as AppCompatActivity).setSupportActionBar(bottom_app_bar)
         }
     }
 
@@ -219,9 +192,9 @@ constructor(
         var initialSelection = 0
 
         lifecycleScope.launch {
-            val orderBy = readPreferences(ORDER_BY_KEY)
-            for(i in myItems.indices){
-                if(myItems[i] == orderBy){
+            val orderBy = preferencesManager.getSortOrder()
+            for (i in myItems.indices) {
+                if (myItems[i] == orderBy) {
                     initialSelection = i
                 }
             }
@@ -229,34 +202,45 @@ constructor(
 
         MaterialDialog(requireContext()).show {
             cornerRadius(16f)
-            title(text = "Order by")
-            listItemsSingleChoice(items = myItems, initialSelection = initialSelection) { dialog, index, text ->
+            title(res = R.string.sort_by)
+            listItemsSingleChoice(
+                items = myItems,
+                initialSelection = initialSelection
+            ) { dialog, index, text ->
 
                 lifecycleScope.launch {
-                    withContext(Dispatchers.IO){savePreferences(ORDER_BY_KEY, text.toString())}
-                    orderBy = readPreferences(ORDER_BY_KEY)
-                    checkNetworkAndSetEvent(REFRESH, orderBy)
-                    this@PictureListFragment.list_toolbar_title.text = orderBy
+                    withContext(Dispatchers.IO) { preferencesManager.saveSortOrder(text.toString()) }
+                    sortOrder = preferencesManager.getSortOrder()
+                    checkNetworkAndSetEvent(REFRESH, sortOrder)
+                    this@PictureListFragment.list_toolbar_title.text = sortOrder
                 }
             }
         }
     }
 
-    private fun showNoNetworkToast(){
+    private fun showNoNetworkToast() {
         requireContext().showToast(getString(R.string.unable_to_load_next_page))
         if (swipe_refresh_layout.isRefreshing) swipe_refresh_layout.isRefreshing = false
     }
 
-    private suspend fun savePreferences(key: String, value: String) {
-        val dataStoreKey = preferencesKey<String>(key)
-        dataStore.edit { sortList ->
-            sortList[dataStoreKey] = value
-        }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.list_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    private suspend fun readPreferences(key: String): String {
-        val dataStoreKey = preferencesKey<String>(key)
-        val preferences = dataStore.data.first()
-        return preferences[dataStoreKey] ?: "latest"
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+
+            R.id.action_order -> {
+                showMaterialDialog()
+            }
+            android.R.id.home -> {
+                findNavController().navigate(R.id.action_pictureListFragment_to_bottomSheetFragment)
+            }
+            else -> { }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

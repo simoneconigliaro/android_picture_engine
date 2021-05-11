@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#000000</color>
+    <color name="colorPrimary">@android:color/white</color>
+    <color name="colorPrimaryDark">@android:color/black</color>
+    <color name="colorAccent">@android:color/black</color>
+    <color name="textColor">@android:color/black</color>
+    <color name="actionBarColor">@android:color/black</color>
+    <color name="textActionBarColor">@android:color/white</color>
+    <color name="iconActionBarColor">@android:color/white</color>
+    <color name="iconColor">@android:color/black</color>
     <color name="lightGrey">#EEEEEE</color>
+    <color name="bgTagItem">#EEEEEE</color>
 </resources>

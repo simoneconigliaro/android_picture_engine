@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.model.PictureDetail
-import com.simoneconigliaro.pictureengine.ui.state.MainStateEvent
 import com.simoneconigliaro.pictureengine.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_picture_detail.*
@@ -72,7 +71,7 @@ constructor(
             findNavController().navigate(R.id.action_pictureDetailFragment_to_pictureFullFragment)
         })
 
-        button_download.setOnClickListener(View.OnClickListener {
+        fab_download.setOnClickListener(View.OnClickListener {
             if (NetworkUtil.isNetworkAvailable(context)) {
                 requireContext().showToast(getString(R.string.downloading))
                 CoroutineScope(IO).launch {
@@ -196,7 +195,7 @@ constructor(
             (activity as AppCompatActivity).setSupportActionBar(custom_tool_bar)
             (activity as AppCompatActivity).supportActionBar?.title = ""
             (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            (activity as AppCompatActivity).supportActionBar?.setHomeButtonEnabled(true);
+            (activity as AppCompatActivity).supportActionBar?.setHomeButtonEnabled(true)
         }
     }
 
@@ -212,7 +211,7 @@ constructor(
             val outputStream: OutputStream?
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val values = ContentValues()
-                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
                 values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + "Engine Picture")
                 val uri: Uri? =
                     context.contentResolver.insert(

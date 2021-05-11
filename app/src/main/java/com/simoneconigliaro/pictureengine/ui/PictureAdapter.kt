@@ -1,17 +1,10 @@
 package com.simoneconigliaro.pictureengine.ui
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.simoneconigliaro.pictureengine.R
 import com.simoneconigliaro.pictureengine.model.Picture
 import kotlinx.android.synthetic.main.layout_picture_list_item.view.*

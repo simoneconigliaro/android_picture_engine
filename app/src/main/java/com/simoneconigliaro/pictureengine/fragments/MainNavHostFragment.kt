@@ -12,7 +12,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainNavHostFragment : NavHostFragment() {
 
-
     @Inject
     lateinit var fragmentFactory: MainFragmentFactory
 
@@ -21,6 +20,4 @@ class MainNavHostFragment : NavHostFragment() {
         childFragmentManager.fragmentFactory = fragmentFactory
 
     }
-
-
 }

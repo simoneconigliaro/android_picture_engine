@@ -14,7 +14,7 @@
             android:id="@+id/search_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark">
+            android:background="@color/actionBarColor">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/search_text_input_layout"
@@ -24,14 +24,17 @@
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
                 app:endIconMode="clear_text"
-                app:endIconTint="@color/colorPrimary"
+                app:endIconTint="@android:color/white"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:textCursorDrawable="@null"
                     android:gravity="center_vertical"
+                    android:textColorHint="@android:color/white"
+                    android:textColor="@android:color/white"
                     android:hint="@string/search"
                     android:imeOptions="actionSearch"
                     android:importantForAutofill="no"
