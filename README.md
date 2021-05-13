@@ -15,5 +15,5 @@ Wallpaper app made using Hilt, Retrofit, Room, Jetpack Architecture, MVI, Flows,
 The app uses Unsplash API. You can get an API key signing up <a href="https://unsplash.com/developers" target="_blank">here</a> and set it here in gradle.properties.
 
 ## Credits
-- App icon from <a href="https://endlessicons.com/free-icons/mountain-icon-1/" target="_blank">Endlessicons.com</a>.
-- Ghosts Icon from <a href="https://www.flaticon.com/free-icon/ghost_1150381?term=ghost&page=1&position=55&page=1&position=55&related_id=1150381&origin=tag" target="_blank">Flaticon.com</a>.
+- App icon from <a href="https://endlessicons.com/free-icons/mountain-icon-1/" target="_blank">Endlessicons</a>.
+- Ghosts Icon from <a href="https://www.flaticon.com/free-icon/ghost_1150381?term=ghost&page=1&position=55&page=1&position=55&related_id=1150381&origin=tag" target="_blank">Flaticon</a>.
