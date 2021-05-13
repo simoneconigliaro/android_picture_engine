@@ -16,4 +16,4 @@ The app uses Unsplash API. You can get an API key signing up <a href="https://un
 
 ## Credits
 - App icon from <a href="https://endlessicons.com/free-icons/mountain-icon-1/" target="_blank">Endlessicons.com</a>.
-- Font Modern Sans Light by <a href="https://www.dafont.com/modern-sans.font" target="_blank">Taruny Incorporated</a>.
+- Ghosts Icon from <a href="https://www.flaticon.com/free-icon/ghost_1150381?term=ghost&page=1&position=55&page=1&position=55&related_id=1150381&origin=tag" target="_blank">Flaticon.com</a>.
