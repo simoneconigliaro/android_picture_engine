@@ -1,4 +1,4 @@
-# Android Picture Engi
+# Android Picture Engine
 Wallpaper app made using Hilt, Retrofit, Room, Jetpack Architecture, MVI, Flows, ViewModel, LiveData, Datastore Preference.
 
 ## Description
