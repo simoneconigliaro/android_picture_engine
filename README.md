@@ -12,8 +12,8 @@ Wallpaper app made using Hilt, Retrofit, Room, Jetpack Architecture, MVI, Flows,
 <img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_1.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_2.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_3.png" width="280"/><img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_4.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_5.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_6.png" width="280"/>
 
 ## Getting Started
-The app uses Open Weather API. You can get an API key signing up <a href="https://home.openweathermap.org/users/sign_up" target="_blank">here</a> and set it here in gradle.properties.
+The app uses Unsplash API. You can get an API key signing up <a href="https://unsplash.com/developers" target="_blank">here</a> and set it here in gradle.properties.
 
 ## Credits
-- Weather icons by <a href="https://adamwhitcroft.com/climacons/" target="_blank">Adam Whitcroft</a>.
+- App icon from <a href="https://endlessicons.com/free-icons/mountain-icon-1/" target="_blank">Endlessicons.com</a>.
 - Font Modern Sans Light by <a href="https://www.dafont.com/modern-sans.font" target="_blank">Taruny Incorporated</a>.
