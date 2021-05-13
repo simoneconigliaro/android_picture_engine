@@ -17,6 +17,8 @@ android {
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "UNSPLASH_API_KEY", UnsplashApiKey)
     }
 
     buildTypes {
