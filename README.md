@@ -1,5 +1,5 @@
 # Android Picture Engine
-Wallpaper app made using Hilt, Retrofit, Room, Navigation Components, MVI, Flows, ViewModel, LiveData, Datastore Preference.
+Wallpaper app made using Hilt, Retrofit, Room, Navigation Components, MVI, Coroutines, Flows, ViewModel, LiveData, Datastore Preference.
 
 ## Description
 - The app shows the user the forecast of your current location with the help of Google Play Services Location fetching the data from <a href="https://openweathermap.org/api" target="_blank">Open Weather API</a>.
