@@ -9,7 +9,6 @@ Wallpaper app made using Hilt, Retrofit, Room, Navigation Components, MVI, Corou
 - The search icon will open a search screen where the user will be able to make custom searches.
 - The Setting icon opens up a bottom sheet icon where the user will be able to change the theme of the app and gets some info from the about section.
 - Tapping on one of the picture will open a details screen with additional information where the user will be also able to download the picture or setting it as a wallpaper.
-- Always on the detail screen, the user can mark a movie as a favourite by tapping the heart icon and it will be stored in a local database. 
 
 ## Screenshots
 <img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_1.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_2.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_3.png" width="280"/><img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_4.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_5.png" width="280"/>&nbsp;&nbsp;<img src="https://github.com/simoneconigliaro/android_weather/blob/master/Screenshot_6.png" width="280"/>
