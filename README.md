@@ -11,16 +11,11 @@ Wallpaper app made using Hilt, Retrofit, Room, Navigation Components, MVI, Corou
 - The app handles error cases showing appropriate messages to the user.
 
 ## Screenshots
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_01.png" width="272"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_02.png" width="272"/>
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_03.png" width="272"/>
+<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_01.png" width="274"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_02.png" width="274"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_03.png" width="274"/>
 
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_04.png" width="271"/>
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_05.png" width="271"/>
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_06.png" width="270"/>
+<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_04.png" width="271"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_05.png" width="271"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_06.png" width="270"/>
 
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_07.png" width="270"/>
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_08.png" width="270"/>
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_09.png" width="270"/>
+<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_07.png" width="270"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_08.png" width="270"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_09.png" width="270"/>
 
 ## Getting Started
 The app uses Unsplash API. You can get an API key signing up <a href="https://unsplash.com/developers" target="_blank">here</a> and set it in gradle.properties.
