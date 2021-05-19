@@ -13,7 +13,7 @@ Wallpaper app made using Hilt, Retrofit, Room, Navigation Components, MVI, Corou
 ## Screenshots
 <img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_01.png" width="270"/>&nbsp;
 <img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_02.png" width="270"/>&nbsp;
-<img src="hhttps://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_03.png" width="270"/>
+<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_03.png" width="270"/>
 
 ## Getting Started
 The app uses Unsplash API. You can get an API key signing up <a href="https://unsplash.com/developers" target="_blank">here</a> and set it in gradle.properties.
