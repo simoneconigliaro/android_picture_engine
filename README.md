@@ -11,7 +11,7 @@ Wallpaper app made using Hilt, Retrofit, Room, Navigation Components, MVI, Corou
 - The app handles error cases showing appropriate messages to the user.
 
 ## Screenshots
-<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_01.png" width="277"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_02.png" width="277"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_03.png" width="277"/>
+<img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_01.png" width="275"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_02.png" width="275"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_03.png" width="275"/>
 
 <img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_04.png" width="277"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_05.png" width="277"/><img src="https://github.com/simoneconigliaro/android_picture_engine/blob/master/Screenshot_06.png" width="277"/>
 
